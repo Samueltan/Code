@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,8 +22,11 @@ import java.util.Map;
 public class DemoApplication {
 
 	@RequestMapping("hello")
-	public String hello() {
-		return "Hello world! I am back.";
+	public String hello(
+        @RequestParam(value = "name", defaultValue = "world!")
+        String name
+    ) {
+		return "Hello " + name;
 	}
 
     @RequestMapping("/user")
