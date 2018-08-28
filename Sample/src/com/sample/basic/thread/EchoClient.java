@@ -1,4 +1,4 @@
-package com.sample.basic.thread.singleton;
+package com.sample.basic.thread;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

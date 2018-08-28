@@ -67,9 +67,12 @@ class ListTest {
 class HashSetTest{
     public static void main(String[] args) {
         HashSet<Student> hashSet = new HashSet<>();
-        hashSet.add(new Student("Nicole", 16));
-        hashSet.add(new Student("粉笔", 18));
-        hashSet.add(new Student("小尹", 14));
+        Student s1 = new Student("Nicole", 16);
+        Student s2 = new Student("粉笔", 18);
+        Student s3 = new Student("小尹", 14);
+        hashSet.add(s1);
+        hashSet.add(s2);
+        hashSet.add(s3);
 
         ArrayList<Student> list = new ArrayList<>(hashSet);
         Collections.sort(list, new Comparator<Student>() {
