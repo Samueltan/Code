@@ -66,28 +66,55 @@ public class SemaphoreDemo {
         Runnable worker = new Runnable() {
             @Override
             public void run() {
-                Object resource = null;
+                Object resource1 = null;
+                Object resource2 = null;
+                Object resource3 = null;
                 try {
                     //获取资源
-                    resource = demo.acquire();
-                    System.out.println(Thread.currentThread().getName() + "\twork   on\t" + resource);
+                    resource1 = demo.acquire();
+                    System.out.println(Thread.currentThread().getName() + "\twork   on\t" + resource1);
                     //用resource做工作
                     Thread.sleep(1000);
-                    System.out.println(Thread.currentThread().getName() + "\tfinish on\t" + resource);
+                    System.out.println(Thread.currentThread().getName() + "\tfinish on\t" + resource1);
+
+                    if (resource1 != null) {
+                        demo.release(resource1);
+                    }
+
+                    resource2 = demo.acquire();
+                    System.out.println(Thread.currentThread().getName() + "\twork   on\t" + resource2);
+                    //用resource做工作
+                    Thread.sleep(1000);
+                    System.out.println(Thread.currentThread().getName() + "\tfinish on\t" + resource2);
+
+                    if (resource2 != null) {
+                        demo.release(resource2);
+                    }
+
+                    resource3 = demo.acquire();
+                    System.out.println(Thread.currentThread().getName() + "\twork   on\t" + resource3);
+                    //用resource做工作
+                    Thread.sleep(1000);
+                    System.out.println(Thread.currentThread().getName() + "\tfinish on\t" + resource3);
+
+                    if (resource3 != null) {
+                        demo.release(resource3);
+                    }
+
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } finally {
                     //归还资源
-                    if (resource != null) {
-                        demo.release(resource);
-                    }
+//                    if (resource3 != null) {
+//                        demo.release(resource3);
+//                    }
                 }
             }
         };
 
         //启动9个任务
         ExecutorService service = Executors.newCachedThreadPool();
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < 3; i++) {
             service.submit(worker);
         }
         service.shutdown();
