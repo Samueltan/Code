@@ -2,16 +2,23 @@ package com.sample.basic;
 import java.util.*;
 
 public class Test {
-    private static int nonLeadingZeroComplement(int i) {
-        int ones = (Integer.highestOneBit(i) << 1) - 1;
-        return i ^ ones;
-    }
-
-    // Driver Code
-    public static void main (String[] args)
-    {
-        int result = nonLeadingZeroComplement(50);
-
-        System.out.println(result);
+    private static boolean stopRequest;
+    public static void main(String args[]) throws InterruptedException {
+        Thread myThread = new Thread(new Runnable() {
+            public void run() {
+                int count = 0;
+                while (!stopRequest) { //访问类属性，共享的
+                    System.out.println("count: " + count++);
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        myThread.start();
+        Thread.sleep(2000);
+        stopRequest = true;
     }
 }
