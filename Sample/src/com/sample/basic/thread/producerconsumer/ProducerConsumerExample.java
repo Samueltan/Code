@@ -13,19 +13,17 @@ public class ProducerConsumerExample {
     }
 
     public void start(){
-        new Producerder().start();
-        new Consumereder().start();
+        new Producer().start();
+        new Consumer().start();
     }
 
-
-
-    class Producerder extends Thread {
+    class Producer extends Thread {
 
         @Override
         public void run() {
             for (int i = 0; i < 15; i++) {
                 try {
-                    this.sleep(1000);
+                    this.sleep(100);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -40,7 +38,7 @@ public class ProducerConsumerExample {
                         Object o = new Object();
                         if(myList.add(o)){
                             System.out.println("Producer: " + o);
-                            myList.notify();
+                            myList.notifyAll();
                         }
                         //*******************************
                         //把上面注释掉后,启用下面一行后。你再在Consumereder中分别是用while和if看下输出结果
@@ -55,13 +53,13 @@ public class ProducerConsumerExample {
     }
 
 
-    class Consumereder extends Thread {
+    class Consumer extends Thread {
 
         @Override
         public void run() {
             for (int i = 0; i < 15; i++) {
                 try {
-                    this.sleep(100);
+                    this.sleep(500);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -72,10 +70,9 @@ public class ProducerConsumerExample {
                             System.out.println("warning: it's empty!");
                             myList.wait();
                         }
-                        System.out.println("oooooooooooooooooo");
                         Object o = myList.removeLast();
-                        System.out.println("Consumereder" + o);
-                        myList.notify();
+                        System.out.println("Consumer: " + o);
+                        myList.notifyAll();
                     } catch (Exception e) {
                         System.out.println("consumer is interrupted!");
                     }
