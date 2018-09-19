@@ -13,17 +13,17 @@ public class ProducerConsumerExample {
     }
 
     public void start(){
-        new Producer().start();
-        new Consumer().start();
+        new Thread(new Producer()).start();
+        new Thread(new Consumer()).start();
     }
 
-    class Producer extends Thread {
+    class Producer implements Runnable {
 
         @Override
         public void run() {
             for (int i = 0; i < 15; i++) {
                 try {
-                    this.sleep(100);
+                    Thread.sleep(100);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -37,7 +37,7 @@ public class ProducerConsumerExample {
                         //*************把这一段注释掉********************
                         Object o = new Object();
                         if(myList.add(o)){
-                            System.out.println("Producer: " + o);
+                            System.out.println("Producer: " + myList.size());
                             myList.notifyAll();
                         }
                         //*******************************
@@ -53,13 +53,13 @@ public class ProducerConsumerExample {
     }
 
 
-    class Consumer extends Thread {
+    class Consumer implements Runnable {
 
         @Override
         public void run() {
             for (int i = 0; i < 15; i++) {
                 try {
-                    this.sleep(500);
+                    Thread.sleep(200);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -71,7 +71,7 @@ public class ProducerConsumerExample {
                             myList.wait();
                         }
                         Object o = myList.removeLast();
-                        System.out.println("Consumer: " + o);
+                        System.out.println("Consumer: " + myList.size());
                         myList.notifyAll();
                     } catch (Exception e) {
                         System.out.println("consumer is interrupted!");
@@ -84,7 +84,7 @@ public class ProducerConsumerExample {
 
 
     public static void main(String[] args) {
-        ProducerConsumerExample ex10 = new ProducerConsumerExample();
-        ex10.start();
+        ProducerConsumerExample example = new ProducerConsumerExample();
+        example.start();
     }
 }
