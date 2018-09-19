@@ -2,7 +2,7 @@ package com.sample.basic.thread.volatiletest;
 
 public class VolatileCount {
 
-    public static int count = 0;
+    public static volatile int count = 0;
 
     public static void inc() {
 
@@ -11,9 +11,9 @@ public class VolatileCount {
             Thread.sleep(1);
         } catch (InterruptedException e) {
         }
-        synchronized (VolatileCount.class) {
+//        synchronized (VolatileCount.class) {
             count++;
-        }
+//        }
     }
 
     public static void main(String[] args) {

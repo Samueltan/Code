@@ -1,8 +1,7 @@
-package com.sample.basic.algrithm.sort;
+package com.sample.algrithm.sort;
 
 import com.sample.basic.collection.Student;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 
 /**

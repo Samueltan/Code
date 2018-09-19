@@ -1,6 +1,5 @@
-package com.sample.basic.algrithm;
+package com.sample.algrithm;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;

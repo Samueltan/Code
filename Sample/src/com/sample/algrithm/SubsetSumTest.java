@@ -1,4 +1,4 @@
-package com.sample.basic.algrithm;
+package com.sample.algrithm;
 
 // A Java program to count all subsets with given sum.
 import java.util.ArrayList;

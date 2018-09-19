@@ -1,4 +1,4 @@
-package com.sample.basic.interview;
+package com.sample.interview;
 
 public class Complement {
     private static int nonLeadingZeroComplement(int i) {

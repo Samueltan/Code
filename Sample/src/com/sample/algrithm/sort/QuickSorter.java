@@ -1,4 +1,4 @@
-package com.sample.basic.algrithm.sort;
+package com.sample.algrithm.sort;
 
 public class QuickSorter {
     public static void quickSort(int[] arr){

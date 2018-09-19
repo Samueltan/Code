@@ -1,4 +1,4 @@
-package com.sample.basic.algrithm.sort;
+package com.sample.algrithm.sort;
 
 import java.util.Comparator;
 
