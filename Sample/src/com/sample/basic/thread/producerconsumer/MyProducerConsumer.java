@@ -34,12 +34,12 @@ public class MyProducerConsumer {
                     list.add(new Object());
                     System.out.println("Producer: " + list.size());
                     list.notifyAll();
+                }
 
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         }
@@ -63,12 +63,12 @@ public class MyProducerConsumer {
                     list.remove(0);
                     System.out.println("Consumer: " + list.size());
                     list.notifyAll();
+                }
 
-                    try {
-                        Thread.sleep(200);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         }
