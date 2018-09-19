@@ -59,7 +59,7 @@ public class ProducerConsumerExample {
         public void run() {
             for (int i = 0; i < 15; i++) {
                 try {
-                    Thread.sleep(200);
+                    Thread.sleep(100);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

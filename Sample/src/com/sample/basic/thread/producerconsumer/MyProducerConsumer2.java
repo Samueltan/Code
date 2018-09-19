@@ -32,12 +32,13 @@ public class MyProducerConsumer2 {
 
                     buffer.add(new Object());
                     System.out.println("Producer: " + buffer.size());
-                    try {
-                        Thread.sleep(100);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
                     buffer.notifyAll();
+                }
+
+                try {
+                    Thread.sleep(1);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }
@@ -59,12 +60,13 @@ public class MyProducerConsumer2 {
 
                     buffer.removeLast();
                     System.out.println("Consumer: " + buffer.size());
-                    try {
-                        Thread.sleep(100);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
                     buffer.notifyAll();
+                }
+
+                try {
+                    Thread.sleep(1);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }
