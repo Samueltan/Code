@@ -10,9 +10,9 @@ public class OuterClass {
     /**
      *静态内部类
      */
-    static class InnerClass1{
+    static class InnerStaticClass {
         /* 在静态内部类中可以存在静态成员 */
-        public static String _name1 = "chenssy_static";
+        public static String _nameStatic = "chenssy_static";
 
         public void display(){
             /*
@@ -26,7 +26,7 @@ public class OuterClass {
     /**
      * 非静态内部类
      */
-    class InnerClass2{
+    class InnerNonStaticClass {
         /* 非静态内部类中不能存在静态成员 */
         public String _name2 = "chenssy_inner";
         /* 非静态内部类中可以调用外围类的任何成员,不管是静态的还是非静态的 */
@@ -44,15 +44,15 @@ public class OuterClass {
      */
     public void display(){
         /* 外围类访问静态内部类：内部类. */
-        System.out.println(InnerClass1._name1);
+        System.out.println(InnerStaticClass._nameStatic);
         /* 静态内部类 可以直接创建实例不需要依赖于外围类 */
-        new InnerClass1().display();
+        new InnerStaticClass().display();
 
         /* 非静态内部的创建需要依赖于外围类 */
         OuterClass outerClass = new OuterClass();
         outerClass.setSex("Female");
-        OuterClass.InnerClass2 inner2 = outerClass.new InnerClass2();
-        /* 方位非静态内部类的成员需要使用非静态内部类的实例 */
+        InnerNonStaticClass inner2 = outerClass.new InnerNonStaticClass();
+        /* 访问非静态内部类的成员需要使用非静态内部类的实例 */
         System.out.println(inner2._name2);
         inner2.display();
     }
