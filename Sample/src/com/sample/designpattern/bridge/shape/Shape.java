@@ -1,4 +1,6 @@
-package com.sample.designpattern.bridge;
+package com.sample.designpattern.bridge.shape;
+
+import com.sample.designpattern.bridge.color.Color;
 
 public abstract class Shape {
     //Composition - implementor

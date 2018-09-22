@@ -1,4 +1,4 @@
-package com.sample.designpattern.bridge;
+package com.sample.designpattern.bridge.color;
 
 public class RedColor implements Color{
 
