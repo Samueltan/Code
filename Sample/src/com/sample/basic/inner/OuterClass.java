@@ -13,6 +13,7 @@ public class OuterClass {
     static class InnerStaticClass {
         /* 在静态内部类中可以存在静态成员 */
         public static String _nameStatic = "chenssy_static";
+        public int a;
 
         public void display(){
             /*
@@ -28,7 +29,7 @@ public class OuterClass {
      */
     class InnerNonStaticClass {
         /* 非静态内部类中不能存在静态成员 */
-        public String _name2 = "chenssy_inner";
+        public static final String _name2 = "chenssy_inner";
         /* 非静态内部类中可以调用外围类的任何成员,不管是静态的还是非静态的 */
         public void display(){
             System.out.println("OuterClass sex：" + sex);

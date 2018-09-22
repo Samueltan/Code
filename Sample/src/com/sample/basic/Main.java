@@ -1,4 +1,4 @@
-package com.sample;
+package com.sample.basic;
 
 class Annoyance extends Exception {}
 class Sneeze extends Annoyance {}

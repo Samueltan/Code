@@ -1,9 +1,9 @@
-package com.sample.basic.thread.singleton;
+package com.sample.designpattern.singleton;
 
 public class SingletonEager {
     private static SingletonEager singletonEager = new SingletonEager();
 
-    private SingletonEager(){}
+//    private SingletonEager(){}
 
     public static SingletonEager getInstance() {
         return singletonEager;

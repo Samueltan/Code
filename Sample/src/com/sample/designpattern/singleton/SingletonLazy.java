@@ -1,9 +1,9 @@
-package com.sample.basic.thread.singleton;
+package com.sample.designpattern.singleton;
 
 public class SingletonLazy {
     private static SingletonLazy singletonLazy;
 
-    private SingletonLazy(){}
+//    private SingletonLazy(){}
 
     public static synchronized SingletonLazy getInstance(){
         if (singletonLazy == null) {

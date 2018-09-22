@@ -1,9 +1,9 @@
-package com.sample.basic.thread.singleton;
+package com.sample.designpattern.singleton;
 
 public class SingletonDoubleCheck {
     private static SingletonDoubleCheck singletonDoubleCheck;
 
-    private SingletonDoubleCheck(){}
+//    private SingletonDoubleCheck(){}
 
     public static SingletonDoubleCheck getInstance(){
         if (singletonDoubleCheck == null) {

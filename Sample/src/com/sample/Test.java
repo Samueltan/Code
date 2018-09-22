@@ -1,6 +1,4 @@
-package com.sample.basic;
-import java.util.*;
-
+package com.sample;
 public class Test {
     private static boolean stopRequest;
     public static void main(String args[]) throws InterruptedException {
