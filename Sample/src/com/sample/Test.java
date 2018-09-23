@@ -1,22 +1,23 @@
 package com.sample;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 public class Test {
     private static boolean stopRequest;
     public static void main(String args[]) throws InterruptedException {
-        Thread myThread = new Thread(new Runnable() {
-            public void run() {
-                int count = 0;
-                while (!stopRequest) { //访问类属性，共享的
-                    System.out.println("count: " + count++);
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-        myThread.start();
-        Thread.sleep(2000);
-        stopRequest = true;
+        List<String> emptyImmutableList = List.of();
+
+        int i = sum(1, 2, 3, 4, 5);
+        System.out.println("i = " + i);
+    }
+
+    public static int sum(int... args) {
+        int result = 0;
+        for (int value : args) {
+            result += value;
+        }
+        return result;
     }
 }
