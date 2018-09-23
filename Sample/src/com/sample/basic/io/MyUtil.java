@@ -1,4 +1,4 @@
-package com.sample.basic.stream;
+package com.sample.basic.io;
 
 import java.io.*;
 import java.nio.ByteBuffer;

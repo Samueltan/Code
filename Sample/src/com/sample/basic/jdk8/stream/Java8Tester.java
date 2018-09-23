@@ -1,4 +1,4 @@
-package com.sample.basic.jdk8;
+package com.sample.basic.jdk8.stream;
 import java.util.*;
 import java.util.stream.Collectors;
 
