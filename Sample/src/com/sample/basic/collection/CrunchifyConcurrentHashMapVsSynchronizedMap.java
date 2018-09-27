@@ -1,4 +1,4 @@
-package com.sample.basic.thread.test;
+package com.sample.basic.collection;
 
 import java.util.Collections;
 import java.util.HashMap;

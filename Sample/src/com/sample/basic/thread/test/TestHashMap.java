@@ -27,8 +27,10 @@ class Runner extends Thread {
 
     @Override
     public void run() {
-        for (int i = 0; i < 1000; i++) {
-            map.put(this.getName() + i, i);
+        synchronized (this) {
+            for (int i = 0; i < 1000; i++) {
+                map.put(this.getName() + i, i);
+            }
         }
         //如果是线程安全,那么HashMap的大小,最后能够达到1W.
         System.out.println(this.getName()+": "+map.size());
