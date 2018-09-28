@@ -1,6 +1,6 @@
 package com.sample.algrithm.sort;
 
-import com.sample.basic.collection.Student;
+import com.sample.basic.collection.student.Student;
 
 import java.util.Comparator;
 
