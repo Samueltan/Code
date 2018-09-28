@@ -2,24 +2,25 @@ package com.sample.basic.collection;
 
 import java.util.*;
 
-public class MapTester{
+public class MapElementOrderTester {
     @SuppressWarnings("unchecked")
     public static void main(String[] args) {
         //HashMap
         System.out.println("------HashMap无序输出------");
-        HashMap<String, String> hsMap=new HashMap<>();
-        hsMap.put("3", "Value3");
-        hsMap.put("1", "Value1");
-        hsMap.put("2", "Value2");
-        hsMap.put("b", "ValueB");
-        hsMap.put("a", "ValueA");
+        HashMap<Integer, String> hsMap=new HashMap<>();
+        hsMap.put(3, "Value3");
+        hsMap.put(1, "Value1");
+        hsMap.put(2, "Value2");
+        hsMap.put(5, "ValueB");
+        hsMap.put(4, "ValueA");
         Iterator it = hsMap.entrySet().iterator();
         while (it.hasNext()) { Map.Entry e = (Map.Entry) it.next();
             System.out.println("Key: " + e.getKey() + "--Value: " + e.getValue());
         }
-//        for(Map.Entry<String, String> e : hsMap.entrySet()) {
-//            System.out.println("Key: " + e.getKey() + " --Value: " + e.getValue());
-//        }
+        System.out.println();
+        for(Map.Entry<Integer, String> e : hsMap.entrySet()) {
+            System.out.println("Key: " + e.getKey() + " --Value: " + e.getValue());
+        }
 
         //TreeMap
         System.out.println("------TreeMap按Key排序输出------");
