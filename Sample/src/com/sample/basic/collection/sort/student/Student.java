@@ -1,4 +1,4 @@
-package com.sample.basic.collection.student;
+package com.sample.basic.collection.sort.student;
 
 public class Student {
     private String name;    // 姓名

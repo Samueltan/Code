@@ -1,4 +1,4 @@
-package com.sample.basic.collection;
+package com.sample.basic.collection.sort;
 
 import java.util.*;
 
@@ -11,7 +11,7 @@ public class TreeMapSortTester {
 
         System.out.println("\nSort by key desc:");
         TreeMap<Integer, String> treeMap2 = new TreeMap<Integer, String>(
-            (o1, o2) -> o2.compareTo(o1)
+            (o1, o2) -> o2 - o1
         );
         init(treeMap2);
         print(treeMap2);

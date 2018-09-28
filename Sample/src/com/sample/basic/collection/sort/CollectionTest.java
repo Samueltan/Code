@@ -1,4 +1,4 @@
-package com.sample.basic.collection;
+package com.sample.basic.collection.sort;
 
 import java.util.*;
 
@@ -40,6 +40,21 @@ public class CollectionTest {
             System.out.println(e.getKey() + " -> " + e.getValue());
         }
 
+        LinkedHashMap<Integer, String> map2 = new LinkedHashMap<Integer, String>(10, 0.75f, false);
+        map2.put(19, "a");
+        map2.put(14, null);
+        map2.put(25, "aikdi");
+        map2.put(27, null);
+        map2.put(null, "b");
+        map2.put(null, "c");
+        map2.put(36, null);
+        map2.put(11, "a changed");
+        System.out.println("\nelements in map2:");
+
+        for (Map.Entry<Integer, String> e : map2.entrySet()) {
+            System.out.println(e.getKey() + " -> " + e.getValue());
+        }
+
         ArrayList<Map.Entry<Integer, String>> arrayMap = new ArrayList<Map.Entry<Integer, String>>(map.entrySet());
         Collections.sort(
             arrayMap,
@@ -49,7 +64,7 @@ public class CollectionTest {
                 return e1.getValue().compareTo(e2.getValue());
             }
         );
-        System.out.println();
+        System.out.println("\nelements in map sorting by value:");
         for (Map.Entry<Integer, String> e : arrayMap) {
             System.out.println(e.getKey() + " -> " + e.getValue());
         }

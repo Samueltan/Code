@@ -1,4 +1,4 @@
-package com.sample.basic.collection.student;
+package com.sample.basic.collection.sort.student;
 
 import java.util.Set;
 import java.util.TreeSet;

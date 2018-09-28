@@ -1,4 +1,4 @@
-package com.sample.basic.collection;
+package com.sample.basic.collection.sort;
 
 import java.util.*;
 

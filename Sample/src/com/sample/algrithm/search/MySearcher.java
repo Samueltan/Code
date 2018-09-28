@@ -1,6 +1,6 @@
 package com.sample.algrithm.search;
 
-import com.sample.basic.collection.student.StudentComparable;
+import com.sample.basic.collection.sort.student.StudentComparable;
 
 public class MySearcher {
     public static <T extends Comparable<T>> int binarySearchLoop(T[] list, T key) {
