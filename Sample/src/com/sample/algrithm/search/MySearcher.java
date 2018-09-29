@@ -1,6 +1,6 @@
 package com.sample.algrithm.search;
 
-import com.sample.basic.collection.sort.student.StudentComparable;
+import com.sample.basic.collection.sort.person.PersonComparable;
 
 public class MySearcher {
     public static <T extends Comparable<T>> int binarySearchLoop(T[] list, T key) {
@@ -40,19 +40,19 @@ public class MySearcher {
     }
 
     public static void main(String[] args) {
-        StudentComparable[] students = {
-                new StudentComparable("蜡笔", 8),
-                new StudentComparable("小尹", 14),
-                new StudentComparable("Nicole", 16),
-                new StudentComparable("粉笔", 18),
-                new StudentComparable("浪逼", 19),
-                new StudentComparable("骚笔", 28)
+        PersonComparable[] people = {
+                new PersonComparable("蜡笔", 8),
+                new PersonComparable("小尹", 14),
+                new PersonComparable("Nicole", 16),
+                new PersonComparable("粉笔", 18),
+                new PersonComparable("浪逼", 19),
+                new PersonComparable("骚笔", 28)
         };
 
-//        int idx = binarySearchLoop(students, new StudentComparable("粉笔", 18));
+//        int idx = binarySearchLoop(people, new PersonComparable("粉笔", 18));
 //        System.out.println("idx = " + idx);
 
-        int idx2 = binarySearchRecursive(students, 0, students.length - 1, new StudentComparable("粉笔", 18));
+        int idx2 = binarySearchRecursive(people, 0, people.length - 1, new PersonComparable("粉笔", 18));
         System.out.println("idx2 = " + idx2);
     }
 }

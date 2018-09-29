@@ -1,6 +1,6 @@
 package com.sample.algrithm.sort;
 
-import com.sample.basic.collection.sort.student.Student;
+import com.sample.basic.collection.sort.person.Person;
 
 import java.util.Comparator;
 
@@ -54,19 +54,19 @@ public class BubbleSorter implements Sorter {
             System.out.println(s);
         }
 
-        Student s1 = new Student("Pheobe", 28);
-        Student s2 = new Student("Nicole", 35);
-        Student s3 = new Student("Xiaoyin", 25);
-        Student[] sList = {s1, s2, s3};
+        Person s1 = new Person("Pheobe", 28);
+        Person s2 = new Person("Nicole", 35);
+        Person s3 = new Person("Xiaoyin", 25);
+        Person[] sList = {s1, s2, s3};
 
-        bubbleSorter.sort(sList, new Comparator<Student>() {
+        bubbleSorter.sort(sList, new Comparator<Person>() {
             @Override
-            public int compare(Student o1, Student o2) {
+            public int compare(Person o1, Person o2) {
                 return o1.getAge() - o2.getAge();
             }
         });
 
-        for(Student s: sList) {
+        for(Person s: sList) {
             System.out.println(s);
         }
     }

@@ -1,28 +1,28 @@
 package com.sample.basic.collection;
 
-import com.sample.basic.collection.sort.student.Student;
+import com.sample.basic.collection.sort.person.Person;
 
 import java.util.*;
 
 public class PrintTest {
     public static void main(String[] args) {
-        List<Student> list = new ArrayList<>();
-        list.add(new Student("liquidweb.com", 80000));
-        list.add(new Student("linode.com", 90000));
-        list.add(new Student("digitalocean.com", 120000));
-        list.add(new Student("aws.amazon.com", 200000));
+        List<Person> list = new ArrayList<>();
+        list.add(new Person("liquidweb.com", 80000));
+        list.add(new Person("linode.com", 90000));
+        list.add(new Person("digitalocean.com", 120000));
+        list.add(new Person("aws.amazon.com", 200000));
         System.out.println(list);
 
-        Map<String, Student> map = new HashMap<>();
-        map.put("alpha", new Student("nicole", 16));
-        map.put("beta", new Student("fenbi", 39));
-        map.put("gama", new Student("xiaoyin", 15));
+        Map<String, Person> map = new HashMap<>();
+        map.put("alpha", new Person("nicole", 16));
+        map.put("beta", new Person("fenbi", 39));
+        map.put("gama", new Person("xiaoyin", 15));
         System.out.println(map);
 
-        Set<Student> set = new HashSet<>();
-        set.add(new Student("nicole", 16));
-        set.add(new Student("fenbi", 39));
-        set.add(new Student("xiaoyin", 15));
+        Set<Person> set = new HashSet<>();
+        set.add(new Person("nicole", 16));
+        set.add(new Person("fenbi", 39));
+        set.add(new Person("xiaoyin", 15));
         System.out.println(set);
     }
 

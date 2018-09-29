@@ -1,6 +1,6 @@
 package com.sample.basic.collection.convert;
 
-import com.sample.basic.collection.sort.student.Student;
+import com.sample.basic.collection.sort.person.Person;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,15 +11,15 @@ public class ListToMapTest {
 
     public static void main(String[] args) {
 
-        List<Student> list = new ArrayList<>();
-        list.add(new Student("liquidweb.com", 80000));
-        list.add(new Student("linode.com", 90000));
-        list.add(new Student("digitalocean.com", 120000));
-        list.add(new Student("aws.amazon.com", 200000));
-        list.add(new Student("mkyong.com", 1));
+        List<Person> list = new ArrayList<>();
+        list.add(new Person("liquidweb.com", 80000));
+        list.add(new Person("linode.com", 90000));
+        list.add(new Person("digitalocean.com", 120000));
+        list.add(new Person("aws.amazon.com", 200000));
+        list.add(new Person("mkyong.com", 1));
 
         Map<String, Integer> result2 = list.stream().collect(
-                Collectors.toMap(Student::getName, Student::getAge));
+                Collectors.toMap(Person::getName, Person::getAge));
 
         System.out.println("Result 2 : " + result2);
 
