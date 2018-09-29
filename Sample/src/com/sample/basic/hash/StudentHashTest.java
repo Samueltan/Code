@@ -6,12 +6,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-class StudentTest extends Person {
+class StudentHashTest extends Person {
 
     int score;
 
-    public StudentTest(int score) {
-        super();
+    public StudentHashTest(String name, int age, int score) {
+        super(name, age);
         this.score = score;
     }
 
@@ -19,14 +19,29 @@ class StudentTest extends Person {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        StudentTest that = (StudentTest) o;
-        return Objects.equals(score, that.score);
+        if (!super.equals(o)) return false;
+        StudentHashTest that = (StudentHashTest) o;
+        return score == that.score;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(score);
+        return Objects.hash(super.hashCode(), score);
     }
+
+//    // Without extension from Person
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (o == null || getClass() != o.getClass()) return false;
+//        StudentHashTest that = (StudentHashTest) o;
+//        return Objects.equals(score, that.score);
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        return Objects.hash(score);
+//    }
 
     public static void main(String[] args) {
         Map<Person, String> map = new HashMap<>(4);
