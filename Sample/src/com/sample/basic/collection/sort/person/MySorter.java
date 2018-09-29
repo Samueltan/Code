@@ -12,7 +12,7 @@ public class MySorter {
         };
 
         Arrays.sort(
-                people,
+            people,
             (s1, s2) -> s1.getName().compareTo(s2.getName())
         );
 
@@ -43,7 +43,7 @@ public class MySorter {
             System.out.println(e.getKey() + " -> " + e.getValue());
         }
 
-        // Map to ArrayList
+        // Map to ArrayList (Create ArrayList from entrySet of the map)
         System.out.println();
         System.out.println("HashMap to ArrayList sorted by key:");
         ArrayList<Map.Entry<Integer, Person>> mapEntryList = new ArrayList<>(map.entrySet());
