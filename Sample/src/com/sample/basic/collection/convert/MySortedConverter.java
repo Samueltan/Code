@@ -1,9 +1,11 @@
-package com.sample.basic.collection.sort.person;
+package com.sample.basic.collection.convert;
+
+import com.sample.basic.collection.sort.person.Person;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class MySorter {
+public class MySortedConverter {
     public static void main(String[] args) {
         Person[] people = {
                 new Person("Nicole", 18),
@@ -28,8 +30,17 @@ public class MySorter {
             (s1, s2) -> s1.getAge() - s2.getAge()
         );
         System.out.println();
-        System.out.println("Array sorted by age using Collections.sort():");
+        System.out.println("ArrayList sorted by age using Collections.sort():");
         for(Person s: list) {
+            System.out.println(s);
+        }
+        System.out.println(list);
+
+        // ArrayList to Array
+        Person[] convertedArray = list.toArray(new Person[list.size()]);
+        System.out.println();
+        System.out.println("Array converted from ArrayList:");
+        for(Person s: convertedArray) {
             System.out.println(s);
         }
 
@@ -42,6 +53,7 @@ public class MySorter {
         for(Map.Entry<Integer, Person> e : map.entrySet()) {
             System.out.println(e.getKey() + " -> " + e.getValue());
         }
+        System.out.println(map.entrySet());
 
         // Map to ArrayList (Create ArrayList from entrySet of the map)
         System.out.println();
@@ -54,6 +66,7 @@ public class MySorter {
         for(Map.Entry<Integer, Person> e : mapEntryList) {
             System.out.println(e.getKey() + " -> " + e.getValue());
         }
+        System.out.println(mapEntryList);
 
         //List to Map
         map = mapEntryList.stream().collect(
@@ -69,5 +82,6 @@ public class MySorter {
         for(Map.Entry<Integer, Person> e : map.entrySet()) {
             System.out.println(e.getKey() + " -> " + e.getValue());
         }
+        System.out.println(map.entrySet());
     }
 }
