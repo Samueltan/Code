@@ -1,4 +1,4 @@
-package com.sample.basic.jdk8.stream;
+package com.sample.basic.java8.stream;
 
 import java.util.Arrays;
 import java.util.List;

@@ -1,13 +1,13 @@
 package com.sample;
 
 public class Test {
-    private static boolean stopRequest;
-    public static void main(String args[])  {
+    Runnable r1 = () -> { System.out.println(this); };
+    Runnable r2 = () -> { System.out.println(toString()); };
 
-        String a = "hello";
-        String b = new String("hello");
-        System.out.println(a.equals(b));
+    public String toString() {  return "Hello, world"; }
+
+    public static void main(String... args) {
+        new Test().r1.run();
+        new Test().r2.run();
     }
-
-
 }
