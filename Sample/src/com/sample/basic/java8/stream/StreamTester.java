@@ -2,7 +2,7 @@ package com.sample.basic.java8.stream;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Java8Tester {
+public class StreamTester {
     public static void main(String args[]){
         System.out.println("使用 Java 7: ");
 
@@ -43,7 +43,7 @@ public class Java8Tester {
             System.out.println(random.nextInt());
         }
 
-        System.out.println("使用 Java 8: ");
+        System.out.println("\n\n使用 Java 8: ");
         System.out.println("列表: " +strings);
 
         count = strings.stream().filter(string->string.isEmpty()).count();
