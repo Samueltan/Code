@@ -2,7 +2,6 @@ package com.sample.basic.java8.stream;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -30,7 +29,6 @@ public class StreamTest {
         System.out.println(supplier.get().max(String::compareTo));
 
         System.out.println();
-        Random random = new Random();
         int[] arr = {2, 5, 6, 9, 3};
         Supplier<IntStream> supplier2 = () -> IntStream.of(arr).sorted();
         supplier2.get().forEach(System.out::println);
