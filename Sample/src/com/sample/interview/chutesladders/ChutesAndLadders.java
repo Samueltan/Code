@@ -73,12 +73,16 @@ public class ChutesAndLadders {
                 e.printStackTrace();
             }
 
+            // TODO:
+            // This properties file is a simple mockup for the players' setup, which currently doesn't support
+            // players with the same name. This can be improved in the future with different approaches.
+
             // Save the players information into players
-            Set<Map.Entry<Object, Object>> entries = properties.entrySet();
-            for (Map.Entry<Object, Object> e : entries) {
-                int id = Integer.parseInt(e.getKey().toString());
-                String name = e.getValue().toString();
-                players.put(new Player(id, name), 0);
+            Set<Object> set = properties.keySet();
+            int i = 0;
+            for (Object e : set) {
+                String name = e.toString();
+                players.put(new Player(i++, name), 0);
             }
         }
 
