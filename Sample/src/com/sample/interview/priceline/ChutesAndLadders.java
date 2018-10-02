@@ -1,4 +1,4 @@
-package com.sample.interview.chutesladders;
+package com.sample.interview.priceline;
 
 import java.io.IOException;
 import java.io.InputStream;

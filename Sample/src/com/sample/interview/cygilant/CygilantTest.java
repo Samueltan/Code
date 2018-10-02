@@ -1,6 +1,6 @@
-package com.sample;
+package com.sample.interview.cygilant;
 
-public class Test {
+public class CygilantTest {
 
     public static void main(String... args) {
         int[] arr = {-5, 0, 2, 3};
