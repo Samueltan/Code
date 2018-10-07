@@ -28,5 +28,6 @@
         <input id="reset" type="reset" tabindex="5" value="reset">
     </p>
 </form>
+<a href="hello">Hello</a>
 </body>
 </html>
