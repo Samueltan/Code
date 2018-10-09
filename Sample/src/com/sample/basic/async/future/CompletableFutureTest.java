@@ -41,5 +41,6 @@ public class CompletableFutureTest {
         //下面就可以看到，f2这个异步事件处理无缝引用了f这个异步事件处理的结果。整个过程中间不需要像future.get()这样引入了不必要的同步阻塞
         CompletableFuture<Integer> f2 = f.thenApply(new PlusOne());
         System.out.println(f2.get()); // Waits until the "calculation" is done, then prints 2
+        exec.shutdown();
     }
 }
