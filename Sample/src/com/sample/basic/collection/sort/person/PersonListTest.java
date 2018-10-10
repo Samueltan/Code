@@ -1,5 +1,7 @@
 package com.sample.basic.collection.sort.person;
 
+import com.sample.entity.Person;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;

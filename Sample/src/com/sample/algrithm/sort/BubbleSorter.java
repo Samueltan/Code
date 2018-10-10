@@ -1,6 +1,6 @@
 package com.sample.algrithm.sort;
 
-import com.sample.basic.collection.sort.person.Person;
+import com.sample.entity.Person;
 
 import java.util.Comparator;
 

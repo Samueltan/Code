@@ -1,5 +1,7 @@
 package com.sample.basic.collection.sort.person;
 
+import com.sample.entity.Person;
+
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -8,7 +10,7 @@ class PersonComparableTreeSetTest {
         System.out.println("Use comparable Person: ");
         // Here PersonComparable elements are required to instantiate the TreeSet, or the following error is thrown:
         // Exception in thread "main" java.lang.ClassCastException:
-        // com.sample.basic.collection.sort.person.Person cannot be cast to java.lang.Comparable
+        // com.sample.entity.Person cannot be cast to java.lang.Comparable
         Set<PersonComparable> set = new TreeSet<>();     // Java 7的钻石语法(构造器后面的尖括号中不需要写类型)
         set.add(new PersonComparable("Hao LUO", 33));
         set.add(new PersonComparable("XJ WANG", 32));

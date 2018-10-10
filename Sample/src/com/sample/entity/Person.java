@@ -1,4 +1,4 @@
-package com.sample.basic.collection.sort.person;
+package com.sample.entity;
 
 import java.util.Objects;
 

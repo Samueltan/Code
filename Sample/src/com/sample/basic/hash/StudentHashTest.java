@@ -1,6 +1,6 @@
 package com.sample.basic.hash;
 
-import com.sample.basic.collection.sort.person.Person;
+import com.sample.entity.Person;
 
 import java.util.HashMap;
 import java.util.Map;

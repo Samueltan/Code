@@ -1,6 +1,6 @@
 package com.sample.basic.collection.convert;
 
-import com.sample.basic.collection.sort.person.Person;
+import com.sample.entity.Person;
 
 import java.util.ArrayList;
 import java.util.List;
