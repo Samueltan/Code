@@ -21,10 +21,10 @@ public class StudentJDBCTemplate implements StudentDAO {
         return;
     }
 
-    public Student getStudent(Integer id) {
-        String SQL = "select * from Student where id = ?";
-        Student student = jdbcTemplateObject.queryForObject(SQL, new Object[]{id}, new StudentMapper());
-        return student;
+    public List<Student> getStudents(String name) {
+        String SQL = "select * from Student where name = ?";
+        List<Student> students = jdbcTemplateObject.query(SQL, new Object[]{name}, new StudentMapper());
+        return students;
     }
 
     public List<Student> listStudents() {

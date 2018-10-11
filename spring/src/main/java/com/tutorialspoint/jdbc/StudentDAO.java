@@ -15,10 +15,10 @@ public interface StudentDAO {
     public void create(String name, Integer age);
 
     /**
-     * This is the method to be used to list down a record from the Student table corresponding
-     * to a passed student id.
+     * This is the method to be used to list down a record list from the Student table corresponding
+     * to a passed student name.
      */
-    public Student getStudent(Integer id);
+    public List<Student> getStudents(String name);
 
     /**
      * This is the method to be used to list down all the records from the Student table.
