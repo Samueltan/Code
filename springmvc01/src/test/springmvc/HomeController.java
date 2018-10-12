@@ -10,6 +10,7 @@ import org.springframework.web.servlet.ModelAndView;
  */
 
 @Controller
+@RequestMapping("/api")
 public class HomeController {
 
 	@RequestMapping("/welcome")
