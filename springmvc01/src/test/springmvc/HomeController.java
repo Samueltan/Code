@@ -10,6 +10,10 @@ import org.springframework.web.servlet.ModelAndView;
  */
 
 @Controller
+/**
+ * Option 1: url-pattern in web.xml uses '/api/*', here the controller doesn't use mapping '/api', or:
+ * Option 2: url-pattern in web.xml uses '/', here uses mapping '/api'
+ */
 @RequestMapping("/api")
 public class HomeController {
 
