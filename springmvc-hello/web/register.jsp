@@ -7,7 +7,7 @@
     <title>register page</title>
 </head>
 <body>
-<form action="register" method="post">
+<form action="api/register" method="post">
     <h5>User registration</h5>
     <p>
         <label>name </label>

@@ -32,7 +32,7 @@ public class UserController {
         return "success";
     }
 
-    @RequestMapping("/api/hello")
+    @RequestMapping("/hello")
     public String hello() {
 
         return "success";
