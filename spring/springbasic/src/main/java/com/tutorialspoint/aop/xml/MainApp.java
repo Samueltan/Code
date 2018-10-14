@@ -1,4 +1,4 @@
-package com.tutorialspoint.aop;
+package com.tutorialspoint.aop.xml;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;

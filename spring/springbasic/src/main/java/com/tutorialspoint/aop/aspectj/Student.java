@@ -1,4 +1,4 @@
-package com.tutorialspoint.aop;
+package com.tutorialspoint.aop.aspectj;
 
 public class Student {
     private Integer age;
