@@ -1,4 +1,4 @@
-package com.springboot.sample;
+package com.springboot.ch1.di;
 
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package com.springboot.sample;
+package com.springboot.ch1.di;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
