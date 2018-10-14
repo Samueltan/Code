@@ -8,6 +8,10 @@ public class FunctionController {
     @Autowired
     FunctionService service;
 
+    public FunctionController(FunctionService service) {
+        this.service = service;
+    }
+
     public void sayHello(String message) {
         service.sayHello(message);
     }
