@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"> <!-- Definition for textEditor bean -->
+    <bean id="textEditor" class="com.tutorialspoint.config.xml.byname.TextEditor" autowire="byName">
+        <property name="name" value="Generic text editor"></property>
+    </bean>
+
+    <!-- Definition for spellChecker bean -->
+    <!-- Here both id "spellChecker" and "SpellChecker" can work for "byName" and "byType"
+         But id "SpellChecker" cannot work for "byName" -->
+    <bean id="spellChecker" class="com.tutorialspoint.config.xml.byname.SpellChecker"></bean>
+</beans>

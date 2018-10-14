@@ -1,8 +1,9 @@
 package com.tutorialspoint.config;
 
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-@Service
+@Component
 public class HelloWorld {
     private String message;
 

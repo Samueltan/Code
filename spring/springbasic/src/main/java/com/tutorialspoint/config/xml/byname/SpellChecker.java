@@ -1,4 +1,4 @@
-package com.tutorialspoint.annotation;
+package com.tutorialspoint.config.xml.byname;
 
 public class SpellChecker {
     public SpellChecker() {

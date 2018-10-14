@@ -1,11 +1,11 @@
-package com.tutorialspoint.autowire;
+package com.tutorialspoint.config.xml.byname;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class MainApp {
     public static void main(String[] args) {
-        ApplicationContext context = new ClassPathXmlApplicationContext("BeansAutowire.xml");
+        ApplicationContext context = new ClassPathXmlApplicationContext("BeansXmlByName.xml");
         TextEditor te = (TextEditor)context.getBean("textEditor");
         te.spellCheck();
     }

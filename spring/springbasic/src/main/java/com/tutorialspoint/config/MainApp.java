@@ -15,8 +15,8 @@ public class MainApp {
         HelloWorld hello2 = ctx.getBean(HelloWorld.class);
         hello2.getMessage();
 
-//        TextEditor te = ctx.getBean(TextEditor.class);
-//        te.spellCheck();
+        TextEditor te = ctx.getBean(TextEditor.class);
+        te.spellCheck();
 
         ctx.stop();
     }

@@ -9,13 +9,14 @@ import org.springframework.context.annotation.Scope;
 @ComponentScan("com.tutorialspoint")
 public class AppConfig {
     /**
-     * All the below @Bean definitions could be removed if @ComponentScan is used
+     * All the below @Bean definitions could be removed if @ComponentScan is used and all beans are
+     * marked with proper annotations (@Component, @Controller, @Service, etc.)
      */
 //    @Bean
 //    public HelloWorld helloWorld(){
 //        return new HelloWorld();
 //    }
-
+//
 //    @Bean
 //    public TextEditor textEditor(){
 //        return new TextEditor(spellChecker());

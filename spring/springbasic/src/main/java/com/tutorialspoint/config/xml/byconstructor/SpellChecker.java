@@ -1,4 +1,4 @@
-package com.tutorialspoint.autowire;
+package com.tutorialspoint.config.xml.byconstructor;
 
 public class SpellChecker {
     public SpellChecker() {

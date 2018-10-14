@@ -1,4 +1,4 @@
-package com.tutorialspoint.annotation;
+package com.tutorialspoint.config.annotation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -7,6 +7,12 @@ public class TextEditor {
     private SpellChecker spellChecker;
     private String name;
 
+//    @Autowired
+    public TextEditor(SpellChecker spellChecker) {
+        this.spellChecker = spellChecker;
+    }
+
+//    @Autowired
 //    public void setSpellChecker(SpellChecker spellChecker){
 //        this.spellChecker = spellChecker;
 //    }

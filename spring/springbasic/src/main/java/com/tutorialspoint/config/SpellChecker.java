@@ -1,5 +1,9 @@
 package com.tutorialspoint.config;
 
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+
+@Service
 public class SpellChecker {
     public SpellChecker() {
 //        System.out.println("Inside SpellChecker constructor.");
