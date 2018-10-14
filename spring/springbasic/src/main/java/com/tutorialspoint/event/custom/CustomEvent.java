@@ -1,4 +1,4 @@
-package com.tutorialspoint.event;
+package com.tutorialspoint.event.custom;
 
 import org.springframework.context.ApplicationEvent;
 

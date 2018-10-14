@@ -1,4 +1,4 @@
-package com.tutorialspoint.config;
+package com.tutorialspoint.config.java;
 
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;

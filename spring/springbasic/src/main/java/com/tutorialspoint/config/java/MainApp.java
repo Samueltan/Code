@@ -1,6 +1,5 @@
-package com.tutorialspoint.config;
+package com.tutorialspoint.config.java;
 
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class MainApp {

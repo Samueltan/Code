@@ -1,4 +1,4 @@
-package com.tutorialspoint.config;
+package com.tutorialspoint.event;
 
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextStartedEvent;

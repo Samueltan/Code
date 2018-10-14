@@ -1,14 +1,18 @@
 package com.tutorialspoint.event;
 
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.support.AbstractApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class MainApp {
     public static void main(String[] args) {
-        AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        CustomEventPublisher publisher = context.getBean(CustomEventPublisher.class);
+        ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("BeansEvent.xml");
+        // Let us raise a start event
+        context.start();
 
-        publisher.publish();
-        publisher.publish();
+        HelloWorld obj = (HelloWorld) context.getBean("helloWorld");
+        obj.getMessage();
+
+        // Let us raise a stop event
+        context.stop();
     }
 }
