@@ -10,7 +10,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
-import sun.nio.ch.IOUtil;
 
 @Configuration
 @ComponentScan("com.springboot.ch2.el")
