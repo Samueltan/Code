@@ -7,7 +7,7 @@ public class TextEditor {
     private SpellChecker spellChecker;
     private String name;
 
-//    @Autowired
+    @Autowired
     public TextEditor(SpellChecker spellChecker) {
         this.spellChecker = spellChecker;
     }
