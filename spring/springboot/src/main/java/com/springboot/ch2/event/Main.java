@@ -7,8 +7,11 @@ public class Main {
         AnnotationConfigApplicationContext context =
                 new AnnotationConfigApplicationContext(EventConfig.class);
 
-        DemoPublisher publisher = context.getBean(DemoPublisher.class);
-        publisher.publish("this is my message");
+        DemoPublisherAware publisher = context.getBean(DemoPublisherAware.class);
+        publisher.publish("hello event via ApplicationEventPublisherAware");
+
+        DemoPublisher publisher2 = context.getBean(DemoPublisher.class);
+        publisher2.publish("this is my message ApplicationContext");
 
         context.close();
     }
