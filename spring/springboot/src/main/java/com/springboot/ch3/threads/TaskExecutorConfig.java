@@ -18,6 +18,8 @@ public class TaskExecutorConfig implements AsyncConfigurer {
         taskExecutor.setCorePoolSize(5);
         taskExecutor.setMaxPoolSize(10);
         taskExecutor.setQueueCapacity(25);
+        taskExecutor.setWaitForTasksToCompleteOnShutdown(true);
+        taskExecutor.setAwaitTerminationSeconds(10);
         taskExecutor.initialize();
         return taskExecutor;
     }
