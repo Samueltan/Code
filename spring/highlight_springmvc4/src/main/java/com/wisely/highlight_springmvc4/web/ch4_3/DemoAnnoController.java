@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.wisely.highlight_springmvc4.domain.DemoObj;
@@ -25,7 +26,7 @@ public class DemoAnnoController {
 	}
 
 	@RequestMapping(value = "/requestParam", produces = "text/plain;charset=UTF-8") //6
-	public @ResponseBody String passRequestParam(Long id,
+	public @ResponseBody String passRequestParam(@RequestParam("idx") Long id,
 			HttpServletRequest request) {
 		
 		return "url:" + request.getRequestURL() + " can access,id: " + id;
