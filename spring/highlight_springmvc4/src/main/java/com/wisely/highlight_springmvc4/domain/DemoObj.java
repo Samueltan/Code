@@ -5,10 +5,10 @@ public class DemoObj {
 	private String name;
 	
 	public DemoObj() {
-//		super();
+		super();
 	}
 	public DemoObj(Long id, String name) {
-//		super();
+		super();
 		this.id = id;
 		this.name = name;
 	}
