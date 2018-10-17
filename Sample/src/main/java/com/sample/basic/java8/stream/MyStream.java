@@ -123,8 +123,8 @@ public class MyStream {
 
         boolean allPink = dolls.stream()
                 .allMatch(d -> d.getColor() == Color.PINK);
-        System.out.println("Is there any pussy pink? " + anyPink);
-        System.out.println("Are all pussies pink? " + allPink);
+        System.out.println("Is there any pink? " + anyPink);
+        System.out.println("Are all pink? " + allPink);
     }
 
     public static void testReduce() {
