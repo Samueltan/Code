@@ -138,6 +138,8 @@ public class FileSearcher {
                 }
             }
 
+            fis.close();
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
 
