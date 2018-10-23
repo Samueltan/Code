@@ -82,7 +82,6 @@ public class FileSearcher {
                 new SimpleFileVisitor<Path>() {
                     @Override
                     public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                        System.out.println("\tAccessing file: " + file);
                         CompletableFuture<Integer> completableFuture = CompletableFuture.supplyAsync(
                             () -> {
                                 return searchInFile(file, searchTerm, queue);
@@ -92,7 +91,9 @@ public class FileSearcher {
 
                         completableFuture.whenComplete(
                                 (result, e) -> {
-                                    System.out.println(file + ": " + result);
+                                    if(result > 0) {
+                                        System.out.println(file + ": " + result);
+                                    }
                                 }
                         );
 
