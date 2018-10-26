@@ -1,4 +1,4 @@
-package com.sample.interview.mimecast;
+package com.mimecast.filesearcher;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -87,35 +87,35 @@ public class FileSearcher {
     }
 
     private static void searchPatternInFolder(
-        final String folderPath,
-        final String searchTerm
+            final String folderPath,
+            final String searchTerm
     )
     {
         try {
             Files.walkFileTree(
-                Paths.get(folderPath),
-                new SimpleFileVisitor<Path>() {
-                    @Override
-                    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                        CompletableFuture<Integer> completableFuture = CompletableFuture.supplyAsync(
-                            () -> {
-                                return searchInFile(file, searchTerm);
-                            },
-                                executorService
-                        );
+                    Paths.get(folderPath),
+                    new SimpleFileVisitor<Path>() {
+                        @Override
+                        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                            CompletableFuture<Integer> completableFuture = CompletableFuture.supplyAsync(
+                                    () -> {
+                                        return searchInFile(file, searchTerm);
+                                    },
+                                    executorService
+                            );
 
-                        completableFuture.whenComplete(
-                            (result, e) -> {
-                                if(result > 0) {
-                                    System.out.println(file + ", " + result);
-                                    queue.add(file + ", " + result + "\n");
-                                }
-                            }
-                        );
+                            completableFuture.whenComplete(
+                                    (result, e) -> {
+                                        if(result > 0) {
+                                            System.out.println(file + ", " + result);
+                                            queue.add(file + ", " + result + "\n");
+                                        }
+                                    }
+                            );
 
-                        return FileVisitResult.CONTINUE;
+                            return FileVisitResult.CONTINUE;
+                        }
                     }
-                }
             );
 
 
@@ -125,8 +125,8 @@ public class FileSearcher {
     }
 
     private static int searchInFile(
-        final Path file,
-        final String searchTerm
+            final Path file,
+            final String searchTerm
     )
     {
         int count = 0;
@@ -136,9 +136,9 @@ public class FileSearcher {
             FileChannel channel = fis.getChannel();
             int fileSize = (int)channel.size();
             MappedByteBuffer mappedBuf = channel.map(
-                FileChannel.MapMode.READ_ONLY,
-                0,
-                fileSize
+                    FileChannel.MapMode.READ_ONLY,
+                    0,
+                    fileSize
             );
 
             for (int offset = 0; offset < fileSize; offset += BUFFER_SIZE) {
