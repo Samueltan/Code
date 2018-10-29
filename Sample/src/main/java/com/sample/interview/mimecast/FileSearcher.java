@@ -20,10 +20,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,7 +37,8 @@ public class FileSearcher {
     private final static int QUEUE_LIMIT = 64;
     private final static int BUFFER_SIZE = 65536;
     private static ConcurrentLinkedQueue<String> queue =  new ConcurrentLinkedQueue<>();
-    static final ExecutorService executorService = Executors.newFixedThreadPool(THREADPOOL_SIZE);
+    private static final ExecutorService executorService = Executors.newFixedThreadPool(THREADPOOL_SIZE);
+    private static List<Future<Integer>> futures = new ArrayList<>();
 
     public static void main(String[] args) throws Exception
     {
@@ -103,6 +107,7 @@ public class FileSearcher {
                             },
                                 executorService
                         );
+                        futures.add(completableFuture);
 
                         completableFuture.whenComplete(
                             (result, e) -> {
@@ -141,12 +146,12 @@ public class FileSearcher {
                 fileSize
             );
 
+            Pattern pattern = Pattern.compile(searchTerm);
             for (int offset = 0; offset < fileSize; offset += BUFFER_SIZE) {
                 int size = (fileSize - offset > BUFFER_SIZE) ? BUFFER_SIZE : fileSize - offset;
                 byte[] b = new byte[size];
                 mappedBuf.get(b);
 
-                Pattern pattern = Pattern.compile(searchTerm);
                 Matcher m = pattern.matcher(new String(b));
                 while(m.find()) {
                     count++;
@@ -167,7 +172,7 @@ public class FileSearcher {
 
     private static void writeResultToCsv(String outputPath)
     {
-        CompletableFuture<Integer> completableFuture = CompletableFuture.supplyAsync(
+        CompletableFuture.supplyAsync(
                 () -> {
                     FileOutputStream out = null;
                     try {
@@ -176,7 +181,9 @@ public class FileSearcher {
                         e.printStackTrace();
                     }
 
-                    while(true)
+                    boolean allDone = true;
+
+                    while(!allDone)
                     {
                         if(!queue.isEmpty()){
                             try {
@@ -185,7 +192,13 @@ public class FileSearcher {
                                 e.printStackTrace();
                             }
                         }
+
+                        for(Future<?> future : futures){
+                            allDone &= future.isDone(); // check if future is done
+                        }
                     }
+
+                    return 0;
                 },
                 executorService
         );
