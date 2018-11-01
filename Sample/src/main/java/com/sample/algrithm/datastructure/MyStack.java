@@ -1,4 +1,4 @@
-package com.sample.basic.datastructure;
+package com.sample.algrithm.datastructure;
 
 import java.util.ArrayDeque;
 import java.util.Deque;

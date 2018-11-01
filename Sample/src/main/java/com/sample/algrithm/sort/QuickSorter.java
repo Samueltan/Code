@@ -1,9 +1,9 @@
 package com.sample.algrithm.sort;
 
+import java.util.Arrays;
+
 public class QuickSorter {
-    public static void quickSort(int[] arr){
-        qsort(arr, 0, arr.length-1);
-    }
+
     private static void qsort(int[] arr, int low, int high){
         if (low < high){
             int pivot=partition(arr, low, high);        //将数组分为两部分
@@ -23,21 +23,20 @@ public class QuickSorter {
                 ++low;
             }
             arr[high] = arr[low];           //交换比枢轴小的记录到右端
+            Arrays.stream(arr).forEach((x) -> System.out.print(x + " "));
+            System.out.print(", pivot = " + pivot + "\n");
         }
         //扫描完成，枢轴到位
-        arr[low] = pivot;
+        arr[high] = pivot;
         //返回的是枢轴的位置
-        return low;
+        return high;
     }
 
     public static void main(String[] args) {
-        int[] list = {35, 15, 21, 17, 28, 72, 42};
+        int[] list = {35, 15, 45, 17, 28, 72};
 
         qsort(list, 0, list.length - 1);
 
-        for(int i : list) {
-            System.out.print(i + " ");
-        }
-        System.out.println();
+        Arrays.stream(list).forEach((x) -> System.out.print(x + " "));
     }
 }

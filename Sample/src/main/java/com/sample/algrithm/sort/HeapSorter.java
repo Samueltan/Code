@@ -5,7 +5,7 @@ import java.util.Arrays;
 public class HeapSorter {
 
     public static void main(String[] args) {
-        int[] arr = {5, 6, 3};
+        int[] arr = {45, 36, 63, 14, 27, 98, 35, 18, 25};
         heapSort(arr, arr.length);
 
 //        Arrays.stream(arr).forEach(i -> System.out.print(i + " "));
