@@ -3263,7 +3263,7 @@ var GridPanelSeriesComponent = /** @class */ (function () {
     };
     GridPanelSeriesComponent.prototype.getGridPanels = function () {
         var _this = this;
-        return this.data.map(function (d, i) {
+        return this.data.map(function (d) {
             var offset;
             var width;
             var height;
@@ -6012,7 +6012,7 @@ var BarHorizontalComponent = /** @class */ (function (_super) {
         var min$$1 = this.xScaleMin
             ? Math.min.apply(Math, [this.xScaleMin].concat(values)) : Math.min.apply(Math, [0].concat(values));
         var max$$1 = this.xScaleMax
-            ? Math.max.apply(Math, [this.xScaleMax].concat(values)) : Math.max.apply(Math, values);
+            ? Math.max.apply(Math, [this.xScaleMax].concat(values)) : Math.max.apply(Math, [0].concat(values));
         return [min$$1, max$$1];
     };
     BarHorizontalComponent.prototype.getYDomain = function () {
@@ -6327,7 +6327,7 @@ var BarHorizontal2DComponent = /** @class */ (function (_super) {
         }
         var min$$1 = Math.min.apply(Math, [0].concat(domain));
         var max$$1 = this.xScaleMax
-            ? Math.max.apply(Math, [this.xScaleMax].concat(domain)) : Math.max.apply(Math, domain);
+            ? Math.max.apply(Math, [this.xScaleMax].concat(domain)) : Math.max.apply(Math, [0].concat(domain));
         return [min$$1, max$$1];
     };
     BarHorizontal2DComponent.prototype.groupTransform = function (group) {
@@ -7239,7 +7239,7 @@ var BarVerticalComponent = /** @class */ (function (_super) {
         var min$$1 = this.yScaleMin
             ? Math.min.apply(Math, [this.yScaleMin].concat(values)) : Math.min.apply(Math, [0].concat(values));
         var max$$1 = this.yScaleMax
-            ? Math.max.apply(Math, [this.yScaleMax].concat(values)) : Math.max.apply(Math, values);
+            ? Math.max.apply(Math, [this.yScaleMax].concat(values)) : Math.max.apply(Math, [0].concat(values));
         return [min$$1, max$$1];
     };
     BarVerticalComponent.prototype.onClick = function (data) {
@@ -7567,7 +7567,7 @@ var BarVertical2DComponent = /** @class */ (function (_super) {
         }
         var min$$1 = Math.min.apply(Math, [0].concat(domain));
         var max$$1 = this.yScaleMax
-            ? Math.max.apply(Math, [this.yScaleMax].concat(domain)) : Math.max.apply(Math, domain);
+            ? Math.max.apply(Math, [this.yScaleMax].concat(domain)) : Math.max.apply(Math, [0].concat(domain));
         return [min$$1, max$$1];
     };
     BarVertical2DComponent.prototype.groupTransform = function (group) {
@@ -10933,8 +10933,8 @@ var LineSeriesComponent = /** @class */ (function () {
             }
             return value;
         })
-            .y0(function (d) { return _this.yScale(d.min ? d.min : d.value); })
-            .y1(function (d) { return _this.yScale(d.max ? d.max : d.value); })
+            .y0(function (d) { return _this.yScale(typeof d.min === 'number' ? d.min : d.value); })
+            .y1(function (d) { return _this.yScale(typeof d.max === 'number' ? d.max : d.value); })
             .curve(this.curve);
     };
     LineSeriesComponent.prototype.getAreaGenerator = function () {
@@ -11910,7 +11910,6 @@ var PieArcComponent = /** @class */ (function () {
     };
     PieArcComponent.prototype.update = function () {
         var calc = this.calculateArc();
-        this.path = calc.startAngle(this.startAngle).endAngle(this.endAngle)();
         this.startOpacity = 0.5;
         this.radialGradientId = 'linearGrad' + id().toString();
         this.gradientFill = "url(#" + this.radialGradientId + ")";
@@ -11922,6 +11921,9 @@ var PieArcComponent = /** @class */ (function () {
                 this.loadAnimation();
                 this.initialized = true;
             }
+        }
+        else {
+            this.path = calc.startAngle(this.startAngle).endAngle(this.endAngle)();
         }
     };
     PieArcComponent.prototype.calculateArc = function () {
