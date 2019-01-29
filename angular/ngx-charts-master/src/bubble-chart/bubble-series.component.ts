@@ -23,7 +23,7 @@ import { formatLabel } from '../common/label.helper';
       <svg:g [attr.transform]="circle.transform">
         <svg:g ngx-charts-circle
           [@animationState]="'active'"
-          class="circle"
+          [ngClass]="circle.selectedStyle"
           [cx]="0"
           [cy]="0"
           [r]="circle.radius"
@@ -113,8 +113,9 @@ export class BubbleSeriesComponent implements OnChanges {
           this.colors.getColor(seriesName);
 
         const isActive = !this.activeEntries.length ? true : this.isActive({name: seriesName});
-        const isSelected = this.isSelected(d.name, d.y);
-        const opacity = isSelected ? this.OPACITY_FULL : this.OPACITY_DIM;
+        const isSelectedFlag = this.isSelected(d.name, d.y);
+        const opacity = isSelectedFlag ? this.OPACITY_FULL : this.OPACITY_DIM;
+        const selectedStyle = isSelectedFlag ? 'circle flashit' : 'circle';
 
         const data = {
           series: seriesName,
@@ -138,6 +139,7 @@ export class BubbleSeriesComponent implements OnChanges {
           tooltipLabel,
           color,
           opacity,
+          selectedStyle,
           seriesName,
           isActive,
           transform: `translate(${cx},${cy})`
@@ -179,6 +181,8 @@ export class BubbleSeriesComponent implements OnChanges {
     this.circles.map(c => {
         if (c.value === value && c.label === label) {
             c.opacity = (c.opacity === this.OPACITY_FULL) ? this.OPACITY_DIM : this.OPACITY_FULL;
+
+            c.selectedStyle = (c.selectedStyle === 'circle') ? 'circle flashit' : 'circle';
         }
     });
     this.select.emit({
