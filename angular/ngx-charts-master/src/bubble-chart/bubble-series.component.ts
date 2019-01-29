@@ -82,8 +82,6 @@ export class BubbleSeriesComponent implements OnChanges {
 
   areaPath: any;
   circles: any[];
-  OPACITY_FULL = 1;
-  OPACITY_DIM = 0.6;
 
   ngOnChanges(changes: SimpleChanges): void {
     this.update();
@@ -113,8 +111,8 @@ export class BubbleSeriesComponent implements OnChanges {
           this.colors.getColor(seriesName);
 
         const isActive = !this.activeEntries.length ? true : this.isActive({name: seriesName});
+        const opacity = isActive ? 1 : 0.3;
         const isSelectedFlag = this.isSelected(d.name, d.y);
-        const opacity = isSelectedFlag ? this.OPACITY_FULL : this.OPACITY_DIM;
         const selectedStyle = isSelectedFlag ? 'circle flashit' : 'circle';
 
         const data = {
@@ -180,8 +178,6 @@ export class BubbleSeriesComponent implements OnChanges {
   onClick(value, label): void {
     this.circles.map(c => {
         if (c.value === value && c.label === label) {
-            c.opacity = (c.opacity === this.OPACITY_FULL) ? this.OPACITY_DIM : this.OPACITY_FULL;
-
             c.selectedStyle = (c.selectedStyle === 'circle') ? 'circle flashit' : 'circle';
         }
     });
@@ -194,7 +190,7 @@ export class BubbleSeriesComponent implements OnChanges {
   isSelected(name, value): boolean {
     if (!this.circles) return false;
     const item = this.circles.find(c => {
-      return (c.data.name === name && c.data.value === value && c.opacity === this.OPACITY_FULL);
+      return (c.data.name === name && c.data.value === value && c.selectedStyle === 'circle flashit');
     });
     return item !== undefined;
   }
@@ -217,12 +213,12 @@ export class BubbleSeriesComponent implements OnChanges {
 
   activateCircle(circle): void {
     circle.barVisible = true;
-    // this.activate.emit({name: this.data.name});
+    this.activate.emit({name: this.data.name});
   }
 
   deactivateCircle(circle): void {
     circle.barVisible = false;
-    // this.deactivate.emit({name: this.data.name});
+    this.deactivate.emit({name: this.data.name});
   }
 
   trackBy(index, circle): string {

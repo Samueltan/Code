@@ -115,7 +115,7 @@
 .flashit{
     color:#f2f;
       -webkit-animation: flash linear 1s infinite;
-      animation: flash linear 2s infinite;
+      animation: flash linear 1s infinite;
   }
   @-webkit-keyframes flash {
       0% { opacity: 1; } 
