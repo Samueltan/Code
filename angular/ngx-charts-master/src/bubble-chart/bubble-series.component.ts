@@ -107,8 +107,8 @@ export class BubbleSeriesComponent implements OnChanges {
         const cy = (this.yScaleType === 'linear') ? this.yScale(Number(y)) : this.yScale(y);
 
         const color = (this.colors.scaleType === 'linear') ?
-          this.colors.getColor(r) :
-          this.colors.getColor(seriesName);
+        this.colors.getColor(r) :
+        this.colors.getColor(seriesName);
 
         const isActive = !this.activeEntries.length ? true : this.isActive({name: seriesName});
         const opacity = isActive ? 1 : 0.3;
@@ -137,6 +137,7 @@ export class BubbleSeriesComponent implements OnChanges {
           tooltipLabel,
           color,
           opacity,
+          isSelectedFlag,
           selectedStyle,
           seriesName,
           isActive,
@@ -178,7 +179,8 @@ export class BubbleSeriesComponent implements OnChanges {
   onClick(value, label): void {
     this.circles.map(c => {
         if (c.value === value && c.label === label) {
-            c.selectedStyle = (c.selectedStyle === 'circle') ? 'circle flashit' : 'circle';
+            c.selectedStyle = c.isSelectedFlag ? 'circle flashit' : 'circle';
+            c.isSelectedFlag = !c.isSelectedFlag;
         }
     });
     this.select.emit({
@@ -190,7 +192,7 @@ export class BubbleSeriesComponent implements OnChanges {
   isSelected(name, value): boolean {
     if (!this.circles) return false;
     const item = this.circles.find(c => {
-      return (c.data.name === name && c.data.value === value && c.selectedStyle === 'circle flashit');
+      return (c.data.name === name && c.data.value === value && c.isSelectedFlag);
     });
     return item !== undefined;
   }
