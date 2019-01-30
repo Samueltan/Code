@@ -5,9 +5,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { colorSets } from '../src/utils/color-sets';
 
 import {
-  bubble,
-  generateData,
-  generateGraph
+  bubble
 } from './data';
 import chartGroups from './chartTypes';
 
@@ -81,11 +79,9 @@ export class AppComponent implements OnInit {
     Object.assign(this, {
       chartGroups,
       colorSets,
-      graph: generateGraph(50),
       bubble
     });
 
-    this.dateData = generateData(5, false);
     this.setColorScheme('cool');
   }
 
