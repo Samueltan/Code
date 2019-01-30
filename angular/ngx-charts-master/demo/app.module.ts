@@ -8,15 +8,8 @@ import { SparklineComponent } from './sparkline/sparkline.component';
 import { TimelineFilterBarChartComponent } from './timeline-filter-bar-chart/timeline-filter-bar-chart.component';
 import { NgxChartsModule } from '../src';
 import { NgxUIModule } from '@swimlane/ngx-ui';
-import { ComboChartComponent, ComboSeriesVerticalComponent } from './combo-chart';
 
 @NgModule({
-  providers: [
-    {
-      provide: APP_BASE_HREF,
-      useFactory: getBaseLocation
-    }
-  ],
   imports: [
     NgxChartsModule,
     BrowserModule,
@@ -27,16 +20,9 @@ import { ComboChartComponent, ComboSeriesVerticalComponent } from './combo-chart
   declarations: [
     AppComponent,
     SparklineComponent,
-    TimelineFilterBarChartComponent,
-    ComboChartComponent,
-    ComboSeriesVerticalComponent
+    TimelineFilterBarChartComponent
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
 
-export function getBaseLocation() {
-    const paths: string[] = location.pathname.split('/').splice(1, 1);
-    const basePath: string = (paths && paths[0]) || '';
-    return '/' + basePath;
-}

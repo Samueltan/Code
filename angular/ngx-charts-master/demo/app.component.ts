@@ -19,7 +19,6 @@ import {
 } from './data';
 import { data as countries } from 'emoji-flags';
 import chartGroups from './chartTypes';
-import { barChart, lineChartSeries } from './combo-chart-data';
 
 const monthName = new Intl.DateTimeFormat('en-us', { month: 'short' });
 const weekdayName = new Intl.DateTimeFormat('en-us', { weekday: 'short' });
@@ -184,26 +183,6 @@ export class AppComponent implements OnInit {
   // heatmap
   heatmapMin: number = 0;
   heatmapMax: number = 50000;
-
-  // Combo Chart
-  barChart: any[] = barChart;
-  lineChartSeries: any[] = lineChartSeries;
-  lineChartScheme = {
-    name: 'coolthree',
-    selectable: true,
-    group: 'Ordinal',
-    domain: ['#01579b', '#7aa3e5', '#a8385d', '#00bfa5']
-  };
-
-  comboBarScheme = {
-    name: 'singleLightBlue',
-    selectable: true,
-    group: 'Ordinal',
-    domain: ['#01579b']
-  };
-
-  showRightYAxisLabel: boolean = true;
-  yAxisLabelRight: string = 'Utilization';
 
   // demos
   totalSales = 0;
