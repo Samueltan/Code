@@ -1,7 +1,34 @@
-<h1>{{title}}</h1>
+<!-- <h1>{{title}}</h1>
 <nav>
   <a routerLink="/dashboard">Dashboard</a>
   <a routerLink="/heroes">Heroes</a>
 </nav>
 <router-outlet></router-outlet>
-<app-messages></app-messages>
+<app-messages></app-messages> -->
+
+<ngx-charts-bubble-chart
+    [view]="view"
+    class="chart-container"
+    [results]="bubble"
+    [animations]="animations"
+    [showGridLines]="showGridLines"
+    [legend]="showLegend"
+    [legendTitle]="legendTitle"
+    [legendPosition]="legendPosition"
+    [xAxis]="showXAxis"
+    [yAxis]="showYAxis"
+    [showXAxisLabel]="showXAxisLabel"
+    [showYAxisLabel]="showYAxisLabel"
+    [xAxisLabel]="xAxisLabel"
+    [yAxisLabel]="yAxisLabel"
+    [autoScale]="true"
+    [xScaleMin]="xScaleMin"
+    [xScaleMax]="xScaleMax"
+    [yScaleMin]="yScaleMin"
+    [yScaleMax]="yScaleMax"
+    [schemeType]="'ordinal'"
+    [roundDomains]="roundDomains"
+    [tooltipDisabled]="tooltipDisabled"
+    [minRadius]="minRadius"
+    [maxRadius]="maxRadius">
+</ngx-charts-bubble-chart>
