@@ -1,31 +1,18 @@
 declare var APP_VERSION: string;
 
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { Location, LocationStrategy, HashLocationStrategy } from '@angular/common';
-import * as shape from 'd3-shape';
-import * as d3 from 'd3';
 
 import { colorSets } from '../src/utils/color-sets';
-import { formatLabel } from '../src/common/label.helper';
+
 import {
-  single,
-  multi,
   bubble,
   generateData,
-  generateGraph,
-  treemap,
-  timelineFilterBarData,
-  fiscalYearReport
+  generateGraph
 } from './data';
-import { data as countries } from 'emoji-flags';
 import chartGroups from './chartTypes';
-
-const monthName = new Intl.DateTimeFormat('en-us', { month: 'short' });
-const weekdayName = new Intl.DateTimeFormat('en-us', { weekday: 'short' });
 
 @Component({
   selector: 'app',
-  providers: [Location, { provide: LocationStrategy, useClass: HashLocationStrategy }],
   encapsulation: ViewEncapsulation.None,
   styleUrls: ['../node_modules/@swimlane/ngx-ui/index.css', './app.component.scss'],
   templateUrl: './app.component.html'
@@ -38,9 +25,6 @@ export class AppComponent implements OnInit {
   chartGroups: any[];
   chart: any;
   realTimeData: boolean = false;
-  countries: any[];
-  single: any[];
-  multi: any[];
   fiscalYearReport: any[];
   dateData: any[];
   dateDataWithRange: any[];
@@ -92,18 +76,13 @@ export class AppComponent implements OnInit {
   selectedColorScheme: string;
   rangeFillOpacity: number = 0.15;
 
-  constructor(public location: Location) {
+  constructor() {
 
     Object.assign(this, {
-      single,
-      multi,
-      countries,
       chartGroups,
       colorSets,
       graph: generateGraph(50),
-      bubble,
-      treemap,
-      fiscalYearReport
+      bubble
     });
 
     this.dateData = generateData(5, false);
@@ -111,12 +90,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    const state = this.location.path(true);
     this.view = [this.width, this.height];
-  }
-
-  select(data) {
-    console.log('Item clicked', data);
   }
 
   setColorScheme(name) {
