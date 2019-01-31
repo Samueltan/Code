@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { colorSets } from './ngx-charts/utils/color-sets';
-import {
-  bubble
-} from './ngx-charts/demo/data';
+import { bubble } from './ngx-charts/demo/data';
 import chartGroups from './ngx-charts/demo/chartTypes';
 
 @Component({
