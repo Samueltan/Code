@@ -15,6 +15,7 @@ import { HeroesComponent }      from './heroes/heroes.component';
 import { HeroSearchComponent }  from './hero-search/hero-search.component';
 import { MessagesComponent }    from './messages/messages.component';
 import { MychartComponent } from './mychart/mychart.component';
+import { BubbleChartComponent } from './ngx-charts/bubble-chart/bubble-chart.component';
 
 @NgModule({
   imports: [
@@ -37,7 +38,8 @@ import { MychartComponent } from './mychart/mychart.component';
     HeroDetailComponent,
     MessagesComponent,
     HeroSearchComponent,
-    MychartComponent
+    MychartComponent,
+    BubbleChartComponent
   ],
   bootstrap: [ AppComponent ]
 })
