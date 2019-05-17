@@ -1,4 +1,6 @@
 /* AppComponent's private CSS styles */
+@import "~bootstrap/dist/css/bootstrap.css";
+
 h1 {
   font-size: 1.2em;
   color: #999;

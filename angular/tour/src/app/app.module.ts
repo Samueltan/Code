@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { HeroesComponent } from './heroes/heroes.component';
 import { NgbdDropdownBasic } from './dropdown-basic';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { NgbdDropdownBasic } from './dropdown-basic';
   imports: [
     BrowserModule,
     FormsModule,
+    FlexLayoutModule,
     NgbModule
   ],
   providers: [],

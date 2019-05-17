@@ -70,7 +70,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.view = [this.width, this.height];
+    // this.view = [this.width, this.height];
 
     this.colorScheme = {
         name: 'cool',

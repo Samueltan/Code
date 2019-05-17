@@ -1,0 +1,33 @@
+.item {
+    color: white;
+}
+
+.item-1 {
+    background-color: darkgreen;
+}
+
+.item-2 {
+    background-color: lightgreen;
+}
+
+.item-3 {
+    background-color: green;
+}
+
+.item-4 {
+    background-color: red;
+}
+
+.item-5 {
+    background-color: blue;
+}
+
+.base {
+    width: 100%;
+    height: 600px;
+}
+
+.large {
+    width: 50%;
+    height: 50%;
+}
