@@ -7,4 +7,10 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'Tour of Heroes';
+  isAllRowsSelected = false;
+
+  switch() {
+      console.log(this.isAllRowsSelected);
+      this.isAllRowsSelected = !this.isAllRowsSelected;
+  }
 }
