@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Built-By: jianhua
+Build-Jdk: 13.0.1
+Class-Path: lib/netty-all-4.1.22.Final.jar lib/lombok-1.18.12.jar
+Main-Class: com.jht.sample.Test
+Created-By: Maven Integration for Eclipse
+
