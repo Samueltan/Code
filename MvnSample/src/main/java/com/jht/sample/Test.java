@@ -20,18 +20,36 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 public class Test {
-	public static void main(String[] args) throws InterruptedException {
-
-//		String ids = Arrays.asList(Locale.getAvailableLocales()).stream()
-//				.map(Locale::toString)
-//				.filter(l -> l.contains("zh"))
-//				.collect(Collectors.joining(", "));
-//		System.out.println(ids);
+	public static int[] sort(int[] arr) {
+		for (int i=arr.length; i>0; i--) {
+			moveMax(arr, i);
+		}
 		
-		byte[] bytes = {(byte) 0b10101100, (byte) 0b00101000};
-		BitSet primes = BitSet.valueOf(bytes);
-		System.out.println(Integer.toString(bytes[0], 2));
-		System.out.println(Integer.toString(bytes[1], 2));
-		System.out.println(primes);
+		return arr;
+	}
+	
+	public static int[] moveMax(int[] arr, int len) {
+		for (int i=0; i<len-1; i++) {
+			if (arr[i] < arr[i+1]) {
+				int t = arr[i+1];
+				arr[i+1] = arr[i];
+				arr[i] = t;
+			}
+		}
+		return arr;
+	}
+	
+	public static void print(int[] arr) {
+		for (int i=0; i<arr.length; i++) {
+			if (i < arr.length - 1)
+				System.out.print(arr[i] + ", ");
+			else
+				System.out.println(arr[i]);
+		}
+	}
+	
+	public static void main(String[] args) {
+		int[] a = {2, 4, 8, 5, 3, 6};
+		print(sort(a));
     }
 }
