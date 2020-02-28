@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 
 export default function Button() {
-  const [buttonText, setButtonText] = useState("Click me, please");
-  console.log('buttonText = ' + buttonText);
+  const [text, setButtonText] = useState("On");
+  console.log('buttonText = ' + text);
   function handleClick() {
-    return setButtonText("Thanks, been clicked!");
+    const txt = text === "On" ? "Off" : "On";
+    return setButtonText(txt);
   }
 
-  return <button onClick={handleClick}>{buttonText}</button>;
+  return <button onClick={handleClick}>{text}</button>;
 }
