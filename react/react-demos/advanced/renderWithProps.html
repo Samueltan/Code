@@ -20,7 +20,7 @@
       }
     }
 
-    class MouseWithCat extends React.Component {
+    class Mouse extends React.Component {
       constructor(props) {
         super(props);
         this.handleMouseMove = this.handleMouseMove.bind(this);
@@ -39,11 +39,10 @@
           <div style={{ height: '100%' }} onMouseMove={this.handleMouseMove}>
 
             {/*
-          我们可以在这里换掉 <p> 的 <Cat>   ......
-          但是接着我们需要创建一个单独的 <MouseWithSomethingElse>
-          每次我们需要使用它时，<MouseWithCat> 是不是真的可以重复使用.
+          Instead of providing a static representation of what <Mouse> renders,
+          use the `render` prop to dynamically determine what to render.
         */}
-            <Cat mouse={this.state} />
+            {this.props.render(this.state)}
           </div>
         );
       }
@@ -54,7 +53,9 @@
         return (
           <div>
             <h1>移动鼠标!</h1>
-            <MouseWithCat />
+            <Mouse render={mouse => (
+              <Cat mouse={mouse} />
+            )} />
           </div>
         );
       }
