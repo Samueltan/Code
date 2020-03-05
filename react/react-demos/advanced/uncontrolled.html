@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <script src="../build/react.development.js"></script>
+  <script src="../build/react-dom.development.js"></script>
+  <script src="../build/babel.min.js"></script>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    class Form extends React.Component {
+      handleClick = () => {
+        const name = this._name.value;
+        console.log(name);
+      }
+
+      render() {
+        return (
+          <div>
+            <input type="text" ref={input => this._name = input}/>
+            <button onClick={this.handleClick}>Sign up</button>
+          </div>
+        );
+      }
+    }
+
+    ReactDOM.render(
+      <Form />,
+      document.getElementById('root')
+    );
+  </script>
+</body>
+
+</html>
