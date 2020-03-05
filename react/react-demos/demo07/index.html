@@ -14,7 +14,7 @@
         constructor(props) {
           super(props);
           this.myTextInput = React.createRef();
-          this.handleClick = this.handleClick.bind(this)
+          // this.handleClick = this.handleClick.bind(this)
         }
         handleClick() {
           this.myTextInput.current.focus();
@@ -23,7 +23,7 @@
           return (
             <div>
               <input type="text" ref={this.myTextInput} />
-              <input type="button" value="Focus the text input" onClick={this.handleClick} />
+              <input type="button" value="Focus the text input" onClick={this.handleClick.bind(this)} />
             </div>
           );
         }
