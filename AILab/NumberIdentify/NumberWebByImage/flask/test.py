@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*- 
 
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior() 
 
 #  CNN权重
 #  用对称破坏的小噪声初始化权重
@@ -28,7 +29,7 @@ def predict(image):
     print(image.shape)
     #  初始化输入X
     #  输入大小为28*28
-    tf.compat.v1.reset_default_graph()
+    tf.reset_default_graph()
     x = tf.placeholder(tf.float32, shape=[None,784])
     #  初始化输出Y
     #  因为MNIST为[0,9]共十个分类
