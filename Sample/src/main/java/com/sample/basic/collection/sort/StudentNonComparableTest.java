@@ -60,11 +60,11 @@ public class StudentNonComparableTest {
 //        };
 //        stus.sort(comparator.reversed());
 
-        stus.sort(Comparator.nullsLast(Comparator.comparing(StudentNonComparable::getScore)).reversed().thenComparing(StudentNonComparable::getAge));
+        stus.sort(Comparator.nullsLast(Comparator.comparingDouble(StudentNonComparable::getScore)).reversed().thenComparing(StudentNonComparable::getAge));
 
-        Iterator itr = stus.iterator();//遍历输出
-        while(itr.hasNext())
-            System.out.println(itr.next());
+        Iterator itTSet = stus.iterator();//遍历输出
+        while(itTSet.hasNext())
+            System.out.println(itTSet.next());
         System.out.println();
     }
 }
