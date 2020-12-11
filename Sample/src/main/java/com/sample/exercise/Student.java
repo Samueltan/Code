@@ -1,4 +1,4 @@
-package com.sample;
+package com.sample.exercise;
 
 import java.util.Objects;
 

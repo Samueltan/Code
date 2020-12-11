@@ -1,4 +1,4 @@
-package com.sample.interview;
+package com.sample.exercise;
 
 public class Complement {
     private static int nonLeadingZeroComplement(int i) {
@@ -11,6 +11,8 @@ public class Complement {
     {
         int i = 66;
         System.out.println("i = " + Integer.toBinaryString(i));
+        Integer x = Integer.highestOneBit(i);
+        System.out.println(x);
         System.out.println("highestOneBit(i) = " + Integer.toBinaryString(Integer.highestOneBit(i)));
         System.out.println("highestOneBit(i) << 1 = " + Integer.toBinaryString(Integer.highestOneBit(i) << 1));
         int ones = (Integer.highestOneBit(i) << 1) - 1;

@@ -1,4 +1,4 @@
-package com.sample.interview;
+package com.sample.exercise;
 
 public class CountItems {
     public static void main(String[] args) {

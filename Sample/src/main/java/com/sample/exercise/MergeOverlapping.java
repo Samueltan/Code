@@ -1,4 +1,4 @@
-package com.sample.interview;
+package com.sample.exercise;
 
 import java.util.ArrayList;
 import java.util.Collections;
