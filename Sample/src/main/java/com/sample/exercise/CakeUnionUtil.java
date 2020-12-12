@@ -19,8 +19,20 @@ public class CakeUnionUtil{
 
     }
 
-    public static<S extends Cake, T extends Cake> List<Cake> union(List<S> list1, List<T> list2) {
-        List<Cake> result = new ArrayList<>();
+//    public static<S extends Cake, T extends S> List<S> union(S[] list1, T[] list2) {
+//        List<S> result = new ArrayList<>();
+//        for(S s : list1) {
+//            result.add(s);
+//        }
+//        for(T t : list2) {
+//            result.add(t);
+//        }
+//        return result;
+////        return union(list1.toArray((S[])new Object[list1.size()]), (T[])(new Object[list1.size()]));
+//    }
+
+    public static<R extends Cake, S extends R, T extends R> List<R> union(S[] list1, T[] list2) {
+        List<R> result = new ArrayList<>();
         for(S s : list1) {
             result.add(s);
         }
@@ -28,18 +40,8 @@ public class CakeUnionUtil{
             result.add(t);
         }
         return result;
+//        return union(list1.toArray((S[])new Object[list1.size()]), (T[])(new Object[list1.size()]));
     }
-
-//    public static<S extends Cake, T extends S> List<S> union(List<T> list1, List<S> list2) {
-//        List<S> result = new ArrayList<>();
-//        for(T t : list1) {
-//            result.add(t);
-//        }
-//        for(S s : list2) {
-//            result.add(s);
-//        }
-//        return result;
-//    }
 }
 
 class Cake {
