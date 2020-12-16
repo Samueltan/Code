@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-@Controller
+@RestController
 public class HomeController {
-    @RequestMapping(value="/", method = RequestMethod.GET)
+    @RequestMapping(value="/hi", method = RequestMethod.GET)
     public String hi() {
         return "Hello, Spring Boot!";
     }
