@@ -8,14 +8,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-@RestController
+@Controller
 public class HomeController {
     @RequestMapping(value="/hi", method = RequestMethod.GET)
+    @ResponseBody
     public String hi() {
         return "Hello, Spring Boot!";
     }
 
     @RequestMapping("/greeting")
+    @ResponseBody
     public String greeting() {
         return "Greetings from Spring Boot!";
     }
