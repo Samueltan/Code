@@ -9,9 +9,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+import spring.demo.model.Greeting;
+
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
 public class HomeController {
+    private static final String template = "Hello, %s!";
+    private final AtomicLong counter = new AtomicLong();
+
     @RequestMapping(value="/hi", method = RequestMethod.GET)
     @ResponseBody
     public String hi(
@@ -21,22 +28,22 @@ public class HomeController {
         return String.format("Hello, %s!", name);
     }
 
-    @RequestMapping("/greeting/{name}")
+    @GetMapping(value={"/greeting/{name}", "/greeting"})
     @ResponseBody
-    public String greeting(
-        @PathVariable("name")
-        String name
+    public Greeting greeting(
+        @PathVariable(required = false) String name
     ) {
-        return String.format("Greetings from Spring Boot to %s!", name);
+        return new Greeting(counter.incrementAndGet(), String.format(template, name));
     }
 
-//    @GetMapping("/home")
-//    public String home() {
-//        return "home";
-//    }
-//
-//    @GetMapping("/hello")
-//    public String hello() {
-//        return "hello";
-//    }
+    @GetMapping("/home")
+    public String home() {
+        return "home";
+    }
+
+    @GetMapping("/hello")
+    @ResponseBody
+    public String hello() {
+        return "hello";
+    }
 }
