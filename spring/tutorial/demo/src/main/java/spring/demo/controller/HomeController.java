@@ -2,6 +2,7 @@ package spring.demo.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,10 +21,13 @@ public class HomeController {
         return String.format("Hello, %s!", name);
     }
 
-    @RequestMapping("/greeting")
+    @RequestMapping("/greeting/{name}")
     @ResponseBody
-    public String greeting() {
-        return "Greetings from Spring Boot!";
+    public String greeting(
+        @PathVariable("name")
+        String name
+    ) {
+        return String.format("Greetings from Spring Boot to %s!", name);
     }
 
 //    @GetMapping("/home")
