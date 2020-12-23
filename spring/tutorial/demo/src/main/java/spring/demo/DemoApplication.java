@@ -9,10 +9,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
 import spring.demo.model.Quote;
 
 @SpringBootApplication
+@EnableScheduling
 public class DemoApplication {
 	public static final Logger log = LoggerFactory.getLogger(DemoApplication.class);
 
