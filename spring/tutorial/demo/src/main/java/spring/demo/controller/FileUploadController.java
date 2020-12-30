@@ -22,52 +22,52 @@ import java.util.stream.Collectors;
 
 @Controller
 public class FileUploadController {
-    private final StorageService storageService;
+//    private final StorageService storageService;
 
-    @Autowired
-    public FileUploadController(StorageService storageService) {
-        this.storageService = storageService;
-    }
+//    @Autowired
+//    public FileUploadController(StorageService storageService) {
+//        this.storageService = storageService;
+//    }
 
-    @GetMapping("/upload")
-    public String listUploadFiles(Model model) throws IOException {
-        model.addAttribute(
-            "files",
-            storageService.loadAll()
-                .map(
-                    path ->
-                    MvcUriComponentsBuilder.fromMethodName(
-                        FileUploadController.class,
-                        "serveFile",
-                        path.getFileName().toString()
-                    )
-                    .build()
-                    .toUri()
-                    .toString()
-                )
-                .collect(Collectors.toList())
-        );
-
-        return "uploadForm";
-    }
-
-    @GetMapping("/upload/files/{filename:.+}")
-    @ResponseBody
-    public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
-        Resource file = storageService.loadAsResource(filename);
-        return ResponseEntity.ok().header(
-            HttpHeaders.CONTENT_DISPOSITION,
-            "attachment; filename=\"" + file.getFilename() + "\""
-        ).body(file);
-    }
-
-    @PostMapping("/upload")
-    public String handleFileUpload(
-        @RequestParam("file") MultipartFile file,
-       RedirectAttributes redirectAttributes
-    ) {
-        return "redirect:/";
-    }
+//    @GetMapping("/upload")
+//    public String listUploadFiles(Model model) throws IOException {
+//        model.addAttribute(
+//            "files",
+//            storageService.loadAll()
+//                .map(
+//                    path ->
+//                    MvcUriComponentsBuilder.fromMethodName(
+//                        FileUploadController.class,
+//                        "serveFile",
+//                        path.getFileName().toString()
+//                    )
+//                    .build()
+//                    .toUri()
+//                    .toString()
+//                )
+//                .collect(Collectors.toList())
+//        );
+//
+//        return "uploadForm";
+//    }
+//
+//    @GetMapping("/upload/files/{filename:.+}")
+//    @ResponseBody
+//    public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
+//        Resource file = storageService.loadAsResource(filename);
+//        return ResponseEntity.ok().header(
+//            HttpHeaders.CONTENT_DISPOSITION,
+//            "attachment; filename=\"" + file.getFilename() + "\""
+//        ).body(file);
+//    }
+//
+//    @PostMapping("/upload")
+//    public String handleFileUpload(
+//        @RequestParam("file") MultipartFile file,
+//       RedirectAttributes redirectAttributes
+//    ) {
+//        return "redirect:/";
+//    }
 
 //    @ExceptionHandler(StorageFileNotFoundException.class)
 //    public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException ex) {
