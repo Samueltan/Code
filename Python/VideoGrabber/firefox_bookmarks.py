@@ -48,12 +48,15 @@ def get_video_urls(link):
     r = requests.get(link)
     page_source = r.text.split('\n')
     video_urls = []
-    pattern = '="(https?://[^"^(]*\.mp4.*)"'
+    pattern = '"(https?:\\\\?\/\\\\?\/[^"(]*480P_[^"]*\.mp4[^"]*)"'
 
     for row in page_source:
         match = re.search(pattern, row)
         if match:
-            video_urls.append(match.group(1))
+            print(match.group(1))
+            matched_url = match.group(1).replace("\/", "/")
+            video_urls.append(matched_url)
+            print(matched_url)
 
     return video_urls
 
@@ -72,7 +75,7 @@ def save_video_file(url):
     global cnt_failed
     global cnt_exist
 
-    # print("Video url: '%s'" % url)
+    print("Video url: '%s'" % url)
 
     idx += 1
     pattern = '([^"^(]*/)*([^"^(]*\.mp4).*'
@@ -98,9 +101,9 @@ def save_video_file(url):
                         cnt_success += 1
                 else:
                     cnt_failed += 1
-                    print("Failed with error code %s" % r.status_code)
+                    print("\nFailed with error code %s" % r.status_code)
             except :
-                print("Exception with url: <%s>, file name: <%s>" % (url, file_name))
+                print("\nException with url: <%s>, file name: <%s>" % (url, file_name))
                 raise 
     else:
         print("No valid video found!")
@@ -142,7 +145,11 @@ if arg.isnumeric():
     download_videos(days)
 elif "http" in arg:
     video_url = arg
-    save_video_file(video_url)
+    if ".mp4" in video_url:
+        save_video_file(video_url)
+    else:
+        video_list = get_video_urls(video_url)
+        save_video_files(video_list)
 else:
     print("Invalid argument!")
 
