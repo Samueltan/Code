@@ -10,7 +10,7 @@ public class TreeMapSortTester {
         print(treeMap1);
 
         System.out.println("\nSort by key desc:");
-        TreeMap<Integer, String> treeMap2 = new TreeMap<Integer, String>(
+        TreeMap<Integer, String> treeMap2 = new TreeMap<>(
             (o1, o2) -> o2 - o1
         );
         init(treeMap2);
