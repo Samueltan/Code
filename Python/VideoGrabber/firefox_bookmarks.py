@@ -48,21 +48,31 @@ def get_video_urls(link):
     r = requests.get(link)
     page_source = r.text.split('\n')
     video_urls = []
-    pattern_hd = '"(https?:\\\\?\/\\\\?\/[^"(]*720P_[^"]*\.mp4[^"]*)"'
-    pattern = '"(https?:\\\\?\/\\\\?\/[^"(]*480P_[^"]*\.mp4[^"]*)"'
+    # pattern_hd = '"(https?:\\\\?\/\\\\?\/[^"(]*720P_[^"]*\.mp4[^"]*)"'
+    pattern = '"(https?:\\\\?\/\\\\?\/[^"(]*\.mp4[^"]*)"'
 
     for row in page_source:
-        match = re.search(pattern_hd, row)
-        matched = False
-        if match:
-            matched = True
-        else:
-            match = re.search(pattern, row)
-            matched = True if match else False
+        matches = re.findall(pattern, row)
+        p720_found = False
+        p480_found = False
+        selected_url = ""
 
-        if matched:
-            matched_url = match.group(1).replace("\/", "/")
-            video_urls.append(matched_url)
+        for match in matches:
+            matched_url = match.replace("\/", "/")
+            if "720P_" in match:
+                selected_url = matched_url
+            elif "480P_" in match:
+                p480_found = True
+                if not p720_found:
+                    selected_url = matched_url
+            elif "240P_" in match:
+                continue
+            else:
+                selected_url = matched_url
+
+        if selected_url:
+            print("selected_url = " + selected_url)
+            video_urls.append(selected_url)
 
     return video_urls
 
