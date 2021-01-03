@@ -98,12 +98,12 @@ def save_video_file(url):
         file_name = match.group(2)
         file_path = DOWNLOAD_PATH + file_name
         # print(file_path)
+        now = datetime.now().strftime("%H:%M:%S")
         if os.path.exists(file_path):
             cnt_exist += 1
-            print("%d: The file '%s' already exists!" % (idx, file_name))
+            print("[%s] %d: The file '%s' already exists!" % (now, idx, file_name))
         else:
-            msg = str(idx) + ": Downloading '" + file_name + "'..."
-            print(msg, end="")
+            print("[%s] %d: Downloading '%s'..." % (now, idx, file_name), end="")
 
             try:
                 r = requests.get(url)
@@ -154,20 +154,20 @@ start = time.time()
 
 if n == 1:
     download_videos(1)
-
-arg = sys.argv[1]
-if arg.isnumeric():
-    days = int(arg)
-    download_videos(days)
-elif "http" in arg:
-    video_url = arg
-    if ".mp4" in video_url:
-        save_video_file(video_url)
-    else:
-        video_list = get_video_urls(video_url)
-        save_video_files(video_list)
 else:
-    print("Invalid argument!")
+    arg = sys.argv[1]
+    if arg.isnumeric():
+        days = int(arg)
+        download_videos(days)
+    elif "http" in arg:
+        video_url = arg
+        if ".mp4" in video_url:
+            save_video_file(video_url)
+        else:
+            video_list = get_video_urls(video_url)
+            save_video_files(video_list)
+    else:
+        print("Invalid argument!")
 
 end = time.time()
 print("Time used: %s Secs" % (end - start))
