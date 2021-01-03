@@ -4,6 +4,7 @@ import sqlite3
 import requests
 import re
 import time
+import shutil
 from datetime import datetime 
 from datetime import timedelta 
 
@@ -43,7 +44,7 @@ def process_bookmarks(cursor, timestamp):
 
 # get the video urls from the link
 def get_video_urls(link):
-    print("Processing url: '%s'" % link)
+    print("\nProcessing url: '%s'" % link)
     
     r = requests.get(link)
     page_source = r.text.split('\n')
@@ -115,7 +116,6 @@ def save_video_file(url):
                         cnt_success += 1
                 else:
                     cnt_failed += 1
-                    print("\nFailed with error code %s" % r.status_code)
             except :
                 print("\nException with url: <%s>, file name: <%s>" % (url, file_name))
                 raise 
@@ -132,17 +132,20 @@ def download_videos(days):
     profiles = [i for i in os.listdir(bookmarks_path) if '.default' in i]
 
     # get sqlite database of firefox bookmarks
-    sqlite_path = bookmarks_path+ profiles[0]+'/places.sqlite copy'
+    sqlite_path = bookmarks_path+ profiles[0]
+    sqlite_db_file_source = sqlite_path + '/places.sqlite'
+    sqlite_db_file_dest = sqlite_path + '/places.sqlite copy'
 
-    # print(sqlite_path)
+    # print(sqlite_db_file_source)
 
-    if os.path.exists(sqlite_path):
-        firefox_connection = sqlite3.connect(sqlite_path)
-    cursor = firefox_connection.cursor()
+    if os.path.exists(sqlite_db_file_source):
+        shutil.copyfile(sqlite_db_file_source, sqlite_db_file_dest)
+        firefox_connection = sqlite3.connect(sqlite_db_file_dest)
+        cursor = firefox_connection.cursor()
 
-    process_bookmarks(cursor, timestamp)
-    
-    cursor.close()
+        process_bookmarks(cursor, timestamp)
+        
+        cursor.close()
 
 n = len(sys.argv)
 
