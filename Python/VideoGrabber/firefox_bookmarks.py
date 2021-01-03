@@ -71,7 +71,7 @@ def get_video_urls(link):
                 selected_url = matched_url
 
         if selected_url:
-            print("selected_url = " + selected_url)
+            # print("selected_url = " + selected_url)
             video_urls.append(selected_url)
 
     return video_urls
@@ -90,8 +90,6 @@ def save_video_file(url):
     global cnt_success
     global cnt_failed
     global cnt_exist
-
-    print("Video url: '%s'" % url)
 
     idx += 1
     pattern = '([^"^(]*/)*([^"^(]*\.mp4).*'
@@ -121,6 +119,8 @@ def save_video_file(url):
             except :
                 print("\nException with url: <%s>, file name: <%s>" % (url, file_name))
                 raise 
+
+        print("Video url: '%s'" % url)
     else:
         print("No valid video found!")
 
