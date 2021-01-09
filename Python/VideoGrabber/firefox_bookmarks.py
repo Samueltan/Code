@@ -100,6 +100,9 @@ def save_video_file(url):
         file_path = DOWNLOAD_PATH + file_name
         # print(file_path)
         now = datetime.now().strftime("%H:%M:%S")
+
+        print("[%s] Video url: '%s'" % (now, url))
+
         if os.path.exists(file_path):
             cnt_exist += 1
             print("[%s] %d: The file '%s' already exists!" % (now, idx, file_name))
@@ -120,7 +123,6 @@ def save_video_file(url):
                 print("\nException with url: <%s>, file name: <%s>" % (url, file_name))
                 raise 
 
-        print("Video url: '%s'" % url)
     else:
         print("No valid video found!")
 
@@ -168,7 +170,10 @@ else:
             save_video_file(video_url)
         else:
             video_list = get_video_urls(video_url)
-            save_video_files(video_list)
+            if video_list:
+                save_video_files(video_list)
+            else:
+                print("No valid video found!")
     else:
         print("Invalid argument!")
 
