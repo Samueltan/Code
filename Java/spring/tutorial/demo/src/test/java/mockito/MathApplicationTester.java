@@ -7,6 +7,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
@@ -33,7 +34,7 @@ public class MathApplicationTester {
     @Test
     public void testAddAndSubtract() {
         mathApplication.setCalculatorService(calculatorService1);
-        when(calculatorService1.add(10.0, 20.0)).thenReturn(30.0);
+        given(calculatorService1.add(10.0, 20.0)).willReturn(30.0);
         when(calculatorService1.subtract(10.0, 20.0)).thenReturn(-10.0);
 
         var sum = mathApplication.add(10.0, 20.0);
