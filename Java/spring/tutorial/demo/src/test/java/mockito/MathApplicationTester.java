@@ -1,12 +1,14 @@
 package mockito;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InOrder;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.inOrder;
@@ -16,13 +18,13 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class MathApplicationTester {
     MathApplication mathApplication;
     CalculatorService calculatorService1;
     CalculatorService calculatorService2;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         mathApplication = new MathApplication();
         calculatorService1 = mock(CalculatorService.class);
@@ -38,9 +40,9 @@ public class MathApplicationTester {
         when(calculatorService1.subtract(10.0, 20.0)).thenReturn(-10.0);
 
         var sum = mathApplication.add(10.0, 20.0);
-        Assert.assertEquals(sum, 30.0, 0);
+        Assertions.assertEquals(sum, 30.0);
         var diff = mathApplication.subtract(10.0, 20.0);
-        Assert.assertEquals(diff, -10.0, 0);
+        Assertions.assertEquals(diff, -10.0);
 
         InOrder inOrder = inOrder(calculatorService1);
 
@@ -48,12 +50,15 @@ public class MathApplicationTester {
         inOrder.verify(calculatorService1).subtract(10.0, 20.0);
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void testAddException() {
         mathApplication.setCalculatorService(calculatorService1);
         doThrow(new RuntimeException("Add operation not implemented")).when(calculatorService1).add(10.0, 20.0);
 
-        var result = mathApplication.add(10.0, 20.0);
+        assertThrows(
+            RuntimeException.class,
+            () -> mathApplication.add(10.0, 20.0)
+        );
     }
 
     @Test
@@ -61,14 +66,17 @@ public class MathApplicationTester {
         mathApplication.setCalculatorService(calculatorService2);
 
         var sum = mathApplication.add(10.0, 20.0);
-        Assert.assertEquals(sum, 30.0, 0);
+        Assertions.assertEquals(sum, 30.0, 0);
     }
 
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void testSubtract() {
         mathApplication.setCalculatorService(calculatorService2);
 
-        var sum = mathApplication.subtract(10.0, 20.0);
+        assertThrows(
+            UnsupportedOperationException.class,
+            () -> mathApplication.subtract(10.0, 20.0)
+        );
     }
 
 }
