@@ -5,9 +5,13 @@ import requests
 import re
 import time
 import shutil
+import ffmpeg
 from datetime import datetime 
 from datetime import timedelta 
+import urllib3
+from pathlib import Path
 
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # set the downloading folder
 DOWNLOAD_PATH = '/Users/samueltan/Downloads/download/auto/'
@@ -93,11 +97,26 @@ def save_video_file(url):
     global cnt_exist
 
     idx += 1
-    pattern = '([^"^(]*/)*([^"^(]*\.mp4).*'
+    source = 'Normal'
+    if ".com/preview" in url or ".com/samples" in url:
+        pattern = '(preview|samples)\/(.*)\/sample\.mp4'
+        source = 'FJSM'
+    elif "uralesbian" in url:
+        pattern = '(tour\/)(.*)\/sample\.mp4'
+        source = 'UL'
+    else:
+        pattern = '([^"^(]*/)*([^"^(]*\.mp4).*'
     match = re.search(pattern, url)
     if match:
-        file_name = match.group(2)
-        file_path = DOWNLOAD_PATH + file_name
+        if source == 'FJSM':
+            file_name = match.group(2) + '.mp4'
+            file_path = DOWNLOAD_PATH + 'fjsm/' + file_name
+        elif source == 'UL':
+            file_name = 'uralesbian_' + match.group(2) + '.mp4'
+            file_path = DOWNLOAD_PATH + 'fjsm/' + file_name
+        else:
+            file_name = match.group(2)
+            file_path = DOWNLOAD_PATH + file_name
         # print(file_path)
         now = datetime.now().strftime("%H:%M:%S")
 
@@ -110,8 +129,7 @@ def save_video_file(url):
             print("[%s] %d: Downloading '%s'..." % (now, idx, file_name), end="")
 
             try:
-                r = requests.get(url)
-                
+                r = requests.get(url, verify=False)
                 if r.status_code == 200:
                     with open(file_path, 'wb') as f:
                         f.write(r.content)
@@ -119,8 +137,9 @@ def save_video_file(url):
                         cnt_success += 1
                 else:
                     cnt_failed += 1
-            except :
+            except Exception as e:
                 print("\nException with url: <%s>, file name: <%s>" % (url, file_name))
+                # print(e)
                 raise 
 
     else:
@@ -149,6 +168,50 @@ def download_videos(days):
         
         cursor.close()
 
+# download all possible pictures files from url
+def download_pics(url):
+    pattern = '(http.*\/(.*?)-)\d+.jpg'
+    match = re.search(pattern, url)
+    if match:
+        full_prefix = match.group(1)
+        name = match.group(2)
+        folder = DOWNLOAD_PATH + 'pic/' + name
+        print('folder = ' + folder)
+        Path(folder).mkdir(parents=True, exist_ok=True)
+
+        i = 0
+        while True:
+            try:
+                i += 1
+                now = datetime.now().strftime("%H:%M:%S")
+                file_name = name + '-' + str(i)
+                full_file_path = folder + '/' + file_name + '.jpg'
+
+                if os.path.exists(full_file_path):
+                    print("[%s] %d: The file '%s' already exists!" % (now, i, file_name))
+                else:
+                    current_url = full_prefix + str(i) + '.jpg'
+                    r = requests.get(current_url, allow_redirects=False)
+                    if r.status_code == 200:
+                        print("[%s] %d: Downloading '%s'..." % (now, i, file_name), end="")
+                        with open(full_file_path, 'wb') as f:
+                            f.write(r.content)
+                            print(" Completed!")
+                    else:
+                        break
+            except Exception as e:
+                print("\nException with url: <%s>, file name: <%s>" % (url, file_name))
+                # print(e)
+                break 
+
+# check if a video contains audio track or not
+def isAudioIncluded(filename):
+    p = ffmpeg.probe(filename, select_streams='a')
+
+    # If p['streams'] is not empty, clip has an audio stream
+    if p['streams']:
+        print('Video clip has audio!')
+
 n = len(sys.argv)
 
 idx = 0
@@ -165,15 +228,19 @@ else:
         days = int(arg)
         download_videos(days)
     elif "http" in arg:
-        video_url = arg
-        if ".mp4" in video_url:
-            save_video_file(video_url)
+        url = arg
+        if ".mp4" in url:
+            save_video_file(url)
+        elif ".jpg" in url:
+            download_pics(url)
         else:
-            video_list = get_video_urls(video_url)
+            video_list = get_video_urls(url)
             if video_list:
                 save_video_files(video_list)
             else:
                 print("No valid video found!")
+    elif ".mp4" in arg:
+        isAudioIncluded(arg)
     else:
         print("Invalid argument!")
 
