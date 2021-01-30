@@ -236,7 +236,7 @@ def save_pics(full_prefix, group, name, width):
                     else:
                         current_url = full_prefix + str(i).zfill(width) + '.jpg'
 
-                    print("gi = %d, current_url = %s" % (gi, current_url))
+                    # print("gi = %d, current_url = %s" % (gi, current_url))
                     r = requests.get(current_url, allow_redirects=False)
                     if r.status_code == 200:
                         fail = 0
@@ -247,7 +247,7 @@ def save_pics(full_prefix, group, name, width):
                             print(" Completed!")
                     else:
                         fail += 1
-                        print('fail = ' + str(fail))
+                        # print('fail = ' + str(fail))
                         break
             except Exception as e:
                 print("\nException with url: <%s>, file name: <%s>" % (url, file_name))
