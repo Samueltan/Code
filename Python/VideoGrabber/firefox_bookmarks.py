@@ -170,39 +170,83 @@ def download_videos(days):
 
 # download all possible pictures files from url
 def download_pics(url):
-    pattern = '(http.*\/(.*?)-)\d+.jpg'
+    pattern = '(http.*\/)\d+\/(.*?)-\d+.jpg'
     match = re.search(pattern, url)
     if match:
         full_prefix = match.group(1)
+        group = True
         name = match.group(2)
         folder = DOWNLOAD_PATH + 'pic/' + name
-        print('folder = ' + folder)
         Path(folder).mkdir(parents=True, exist_ok=True)
+        # print('folder = ' + folder)
+        # print('full_prefix = ' + full_prefix)
+        # print('folder = ' + folder)
+        # print('name = ' + name)
 
+        save_pics(full_prefix, group, name)
+    else:
+        pattern = '(http.*\/(.*?)-)\d+.jpg'
+        match = re.search(pattern, url)
+        if match:
+            full_prefix = match.group(1)
+            group = False
+            name = match.group(2)
+            folder = DOWNLOAD_PATH + 'pic/' + name
+            Path(folder).mkdir(parents=True, exist_ok=True)
+            # print('folder = ' + folder)
+            # print('full_prefix = ' + full_prefix)
+            # print('folder = ' + folder)
+            # print('name = ' + name)
+
+            save_pics(full_prefix, group, name)
+
+# save pics based on group id and file name
+def save_pics(full_prefix, group, name):
+    gi = 0
+    cnt = 0
+    fail = 0
+    while True:
         i = 0
+        gi += 1
         while True:
             try:
                 i += 1
                 now = datetime.now().strftime("%H:%M:%S")
-                file_name = name + '-' + str(i)
+                if group:
+                    file_name = name + '-' + str(gi).zfill(3) + str(i).zfill(3)
+                else:
+                    file_name = name + '-' + str(i).zfill(3)
+                folder = DOWNLOAD_PATH + 'pic/' + name
                 full_file_path = folder + '/' + file_name + '.jpg'
 
                 if os.path.exists(full_file_path):
-                    print("[%s] %d: The file '%s' already exists!" % (now, i, file_name))
+                    cnt += 1
+                    print("[%s] %d: The file '%s' already exists!" % (now, cnt, file_name))
                 else:
-                    current_url = full_prefix + str(i) + '.jpg'
+                    if group:
+                        current_url = full_prefix + str(gi) + '/' + name + '-' + str(i) + '.jpg'
+                    else:
+                        current_url = full_prefix + str(i) + '.jpg'
+
+                    # print('current_url = ' + current_url)
                     r = requests.get(current_url, allow_redirects=False)
                     if r.status_code == 200:
-                        print("[%s] %d: Downloading '%s'..." % (now, i, file_name), end="")
+                        fail = 0
+                        cnt += 1
+                        print("[%s] %d: Downloading '%s'..." % (now, cnt, file_name), end="")
                         with open(full_file_path, 'wb') as f:
                             f.write(r.content)
                             print(" Completed!")
                     else:
+                        fail += 1
                         break
             except Exception as e:
                 print("\nException with url: <%s>, file name: <%s>" % (url, file_name))
                 # print(e)
                 break 
+
+        if not group or fail > 1:
+            break
 
 # check if a video contains audio track or not
 def isAudioIncluded(filename):
