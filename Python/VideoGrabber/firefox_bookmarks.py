@@ -104,6 +104,9 @@ def save_video_file(url):
     elif "uralesbian" in url:
         pattern = '(tour\/)(.*)\/sample\.mp4'
         source = 'UL'
+    elif "lollipopgirls" in url:
+        pattern = '(scenes\/)(.*)\/sample\.mp4'
+        source = 'LG'
     else:
         pattern = '([^"^(]*/)*([^"^(]*\.mp4).*'
     match = re.search(pattern, url)
@@ -113,6 +116,9 @@ def save_video_file(url):
             file_path = DOWNLOAD_PATH + 'fjsm/' + file_name
         elif source == 'UL':
             file_name = 'uralesbian_' + match.group(2) + '.mp4'
+            file_path = DOWNLOAD_PATH + 'fjsm/' + file_name
+        elif source == 'LG':
+            file_name = 'lollipopgirls_' + match.group(2) + '.mp4'
             file_path = DOWNLOAD_PATH + 'fjsm/' + file_name
         else:
             file_name = match.group(2)
@@ -170,12 +176,13 @@ def download_videos(days):
 
 # download all possible pictures files from url
 def download_pics(url):
-    pattern = '(http.*\/)\d+\/(.*?)-\d+.jpg'
+    pattern = '(http.*\/)(\d+)\/(.*?)-(\d+).jpg'
     match = re.search(pattern, url)
     if match:
         full_prefix = match.group(1)
-        group = True
-        name = match.group(2)
+        group = match.group(2)
+        name = match.group(3)
+        width = len(match.group(4))
         folder = DOWNLOAD_PATH + 'pic/' + name
         Path(folder).mkdir(parents=True, exist_ok=True)
         # print('folder = ' + folder)
@@ -183,14 +190,15 @@ def download_pics(url):
         # print('folder = ' + folder)
         # print('name = ' + name)
 
-        save_pics(full_prefix, group, name)
+        save_pics(full_prefix, group, name, width)
     else:
-        pattern = '(http.*\/(.*?)-)\d+.jpg'
+        pattern = '(http.*\/(.*?)-)(\d+).jpg'
         match = re.search(pattern, url)
         if match:
             full_prefix = match.group(1)
-            group = False
+            group = ""
             name = match.group(2)
+            width = len(match.group(3))
             folder = DOWNLOAD_PATH + 'pic/' + name
             Path(folder).mkdir(parents=True, exist_ok=True)
             # print('folder = ' + folder)
@@ -198,10 +206,10 @@ def download_pics(url):
             # print('folder = ' + folder)
             # print('name = ' + name)
 
-            save_pics(full_prefix, group, name)
+            save_pics(full_prefix, group, name, width)
 
 # save pics based on group id and file name
-def save_pics(full_prefix, group, name):
+def save_pics(full_prefix, group, name, width):
     gi = 0
     cnt = 0
     fail = 0
@@ -224,11 +232,11 @@ def save_pics(full_prefix, group, name):
                     print("[%s] %d: The file '%s' already exists!" % (now, cnt, file_name))
                 else:
                     if group:
-                        current_url = full_prefix + str(gi) + '/' + name + '-' + str(i) + '.jpg'
+                        current_url = full_prefix + str(gi).zfill(len(group)) + '/' + name + '-' + str(i).zfill(width) + '.jpg'
                     else:
-                        current_url = full_prefix + str(i) + '.jpg'
+                        current_url = full_prefix + str(i).zfill(width) + '.jpg'
 
-                    # print('current_url = ' + current_url)
+                    print("gi = %d, current_url = %s" % (gi, current_url))
                     r = requests.get(current_url, allow_redirects=False)
                     if r.status_code == 200:
                         fail = 0
@@ -239,14 +247,21 @@ def save_pics(full_prefix, group, name):
                             print(" Completed!")
                     else:
                         fail += 1
+                        print('fail = ' + str(fail))
                         break
             except Exception as e:
                 print("\nException with url: <%s>, file name: <%s>" % (url, file_name))
                 # print(e)
                 break 
 
+        # if not group or (fail >1 and gi > 1):
         if not group or fail > 1:
             break
+
+        if fail == 1 and gi == 1:
+            gi = int(group) - 1
+            print('gi = ' + str(gi))
+            continue
 
 # check if a video contains audio track or not
 def isAudioIncluded(filename):
