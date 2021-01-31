@@ -208,12 +208,13 @@ def download_pics(url):
 
 # save pics based on group id and file name
 def save_pics(full_prefix, group, name, width):
-    gi = 0
+    gi = int(group) + 1
     cnt = 0
     fail = 0
-    while True:
+    # Save pics from current group number back to possible decreasing group number until failed or group number 1
+    while gi > 1:
+        gi -= 1
         i = 0
-        gi += 1
         while True:
             try:
                 i += 1
@@ -260,10 +261,57 @@ def save_pics(full_prefix, group, name, width):
         if not group or fail > 1:
             break
 
-        if fail > 1 and gi == 1:
-            gi = int(group) - 1
-            print('gi = ' + str(gi))
-            continue
+    # Save pics from current group number to possible increasing group numbers until failed
+    gi = int(group)
+    fail = 0
+    while True:
+        gi += 1
+        i = 0
+        while True:
+            try:
+                i += 1
+                now = datetime.now().strftime("%H:%M:%S")
+                if group:
+                    file_name = name + '-' + str(gi).zfill(3) + str(i).zfill(3)
+                else:
+                    file_name = name + '-' + str(i).zfill(3)
+                folder = DOWNLOAD_PATH + 'pic/' + name
+                full_file_path = folder + '/' + file_name + '.jpg'
+
+                if os.path.exists(full_file_path):
+                    cnt += 1
+                    print("[%s] %d: The file '%s' already exists!" % (now, cnt, file_name))
+                else:
+                    if group:
+                        pattern_digit = '(.*?)(\d+)(.*?)'
+                        match_digit = re.search(pattern_digit, full_prefix)
+                        full_prefix = full_prefix.replace(match_digit.group(2), str(gi))
+
+                        current_url = full_prefix + str(i) + '.jpg'
+                    else:
+                        current_url = full_prefix + str(i) + '.jpg'
+
+                    # print("gi = %d, current_url = %s" % (gi, current_url))
+                    r = requests.get(current_url, allow_redirects=False)
+                    if r.status_code == 200:
+                        fail = 0
+                        cnt += 1
+                        print("[%s] %d: Downloading '%s'..." % (now, cnt, file_name), end="")
+                        with open(full_file_path, 'wb') as f:
+                            f.write(r.content)
+                            print(" Completed!")
+                    else:
+                        fail += 1
+                        # print('fail = ' + str(fail))
+                        break
+            except Exception as e:
+                print("\nException with url: <%s>, file name: <%s>" % (url, file_name))
+                # print(e)
+                break 
+
+        # if not group or (fail >1 and gi > 1):
+        if not group or fail > 1:
+            break
 
 # check if a video contains audio track or not
 def isAudioIncluded(filename):
