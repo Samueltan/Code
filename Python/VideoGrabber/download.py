@@ -176,10 +176,10 @@ def download_videos(days):
 
 # download all possible pictures files from url
 def download_pics(url):
-    pattern_with_leadingno_group  = '(http.*\/(\d+)(_|-.*?)\/(.*?)-)(\d+).jpg'
-    pattern_with_scene_group      = '(http.*\/.*?-scene(\d+)()\/(.*?)-)(\d+).jpg'
-    pattern_with_onlyno_group     = '(http.*\/(\d+)()\/(.*?)-)(\d+).jpg'
-    pattern_no_group              = '(http.*\/()()(.*?)-)(\d+).jpg'
+    pattern_with_leadingno_group  = '(http.*\/(\d+)((_|-).*?)\/(.*?)-)(\d+).jpg'
+    pattern_with_scene_group      = '(http.*\/.*?(-|_)scene(\d+)()\/(.*?)-)(\d+).jpg'
+    pattern_with_onlyno_group     = '(http.*\/(\d+)()()\/(.*?)-)(\d+).jpg'
+    pattern_no_group              = '(http.*\/()()()(.*?)-)(\d+).jpg'
 
     pic_patterns = [
         pattern_with_leadingno_group,
@@ -189,12 +189,12 @@ def download_pics(url):
     ]
 
     for pic_pattern in pic_patterns:
-        # print(pic_pattern)
+        print(pic_pattern)
         match = re.search(pic_pattern, url)
         if match:
             full_prefix = match.group(1)
             group = match.group(2)
-            name = match.group(4)
+            name = match.group(5)
             folder = DOWNLOAD_PATH + 'pic/' + name
             Path(folder).mkdir(parents=True, exist_ok=True)
             print('full_prefix = ' + full_prefix)
