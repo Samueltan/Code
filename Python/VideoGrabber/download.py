@@ -207,8 +207,8 @@ def download_pics(url):
 # save pics based on group id and file name
 def save_pics(full_prefix, group, name):
     # Save pics from current group number back to possible decreasing group number until failed or group number 1
-    # print('group = ' + group)
-    gi = int(group) + 1
+    print('group = ' + group)
+    gi = int(group) + 1 if group else 1
     cnt = 0
     fail = 0
     while gi > 1:
@@ -219,7 +219,7 @@ def save_pics(full_prefix, group, name):
             break
 
     # Save pics from current group number to possible increasing group numbers until failed
-    gi = int(group)
+    gi = int(group) if group else 0
     while True:
         gi += 1
         cnt, fail = save_group(full_prefix, group, name, gi, cnt, fail)
