@@ -214,7 +214,6 @@ def save_pics(full_prefix, group, name):
     while gi > 1:
         gi -= 1
         cnt, fail = save_group(full_prefix, group, name, gi, cnt, fail)
-        print('fail = ' + str(fail))
 
         if not group or fail > 1:
             break
@@ -224,7 +223,6 @@ def save_pics(full_prefix, group, name):
     while True:
         gi += 1
         cnt, fail = save_group(full_prefix, group, name, gi, cnt, fail)
-        print('fail = ' + str(fail))
 
         if not group or fail > 1:
             break
