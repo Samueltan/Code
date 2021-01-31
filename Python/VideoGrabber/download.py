@@ -189,7 +189,7 @@ def download_pics(url):
     ]
 
     for pic_pattern in pic_patterns:
-        print(pic_pattern)
+        # print(pic_pattern)
         match = re.search(pic_pattern, url)
         if match:
             full_prefix = match.group(1)
@@ -197,7 +197,7 @@ def download_pics(url):
             name = match.group(5)
             folder = DOWNLOAD_PATH + 'pic/' + name
             Path(folder).mkdir(parents=True, exist_ok=True)
-            print('full_prefix = ' + full_prefix)
+            # print('full_prefix = ' + full_prefix)
             # print('folder = ' + folder)
             # print('name = ' + name)
 
@@ -207,7 +207,7 @@ def download_pics(url):
 # save pics based on group id and file name
 def save_pics(full_prefix, group, name):
     # Save pics from current group number back to possible decreasing group number until failed or group number 1
-    print('group = ' + group)
+    # print('group = ' + group)
     gi = int(group) + 1
     cnt = 0
     fail = 0
