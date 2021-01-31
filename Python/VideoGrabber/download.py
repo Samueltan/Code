@@ -176,7 +176,7 @@ def download_videos(days):
 
 # download all possible pictures files from url
 def download_pics(url):
-    pattern_with_leadingno_group  = '(http.*\/(\d+)(_.*?)\/(.*?)-)(\d+).jpg'
+    pattern_with_leadingno_group  = '(http.*\/(\d+)(_|-.*?)\/(.*?)-)(\d+).jpg'
     pattern_with_scene_group      = '(http.*\/.*?-scene(\d+)()\/(.*?)-)(\d+).jpg'
     pattern_with_onlyno_group     = '(http.*\/(\d+)()\/(.*?)-)(\d+).jpg'
     pattern_no_group              = '(http.*\/()()(.*?)-)(\d+).jpg'
@@ -195,23 +195,22 @@ def download_pics(url):
             full_prefix = match.group(1)
             group = match.group(2)
             name = match.group(4)
-            width = len(match.group(5))
             folder = DOWNLOAD_PATH + 'pic/' + name
             Path(folder).mkdir(parents=True, exist_ok=True)
-            # print('folder = ' + folder)
-            # print('full_prefix = ' + full_prefix)
+            print('full_prefix = ' + full_prefix)
             # print('folder = ' + folder)
             # print('name = ' + name)
 
-            save_pics(full_prefix, group, name, width)
+            save_pics(full_prefix, group, name)
             break
 
 # save pics based on group id and file name
-def save_pics(full_prefix, group, name, width):
+def save_pics(full_prefix, group, name):
+    # Save pics from current group number back to possible decreasing group number until failed or group number 1
+    print('group = ' + group)
     gi = int(group) + 1
     cnt = 0
     fail = 0
-    # Save pics from current group number back to possible decreasing group number until failed or group number 1
     while gi > 1:
         gi -= 1
         i = 0
@@ -231,9 +230,10 @@ def save_pics(full_prefix, group, name, width):
                     print("[%s] %d: The file '%s' already exists!" % (now, cnt, file_name))
                 else:
                     if group:
-                        pattern_digit = '(.*?)(\d+)(.*?)'
+                        pattern_digit = '/[^/]*?(\d+)[^/]*\/' + name + '-$'
                         match_digit = re.search(pattern_digit, full_prefix)
-                        full_prefix = full_prefix.replace(match_digit.group(2), str(gi))
+                        group_new = str(gi).zfill(len(group))
+                        full_prefix = full_prefix.replace(match_digit.group(1), group_new)
 
                         current_url = full_prefix + str(i) + '.jpg'
                     else:
@@ -283,9 +283,10 @@ def save_pics(full_prefix, group, name, width):
                     print("[%s] %d: The file '%s' already exists!" % (now, cnt, file_name))
                 else:
                     if group:
-                        pattern_digit = '(.*?)(\d+)(.*?)'
+                        pattern_digit = '/[^/]*?(\d+)[^/]*\/' + name + '-$'
                         match_digit = re.search(pattern_digit, full_prefix)
-                        full_prefix = full_prefix.replace(match_digit.group(2), str(gi))
+                        group_new = str(gi).zfill(len(group))
+                        full_prefix = full_prefix.replace(match_digit.group(1), group_new)
 
                         current_url = full_prefix + str(i) + '.jpg'
                     else:
