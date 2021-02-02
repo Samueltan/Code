@@ -39,100 +39,145 @@ def process_bookmarks(cursor, timestamp):
     for row in cursor:
         link = row[0]
         title = row[1]
-        video_list = get_video_urls(link)
-        save_video_files(video_list)
+        file_list = get_file_urls(link)
+        save_files(file_list)
     
     print("\nSuccessful: %s" % cnt_success)
     print("Failed: %s" % cnt_failed)
     print("Already Existed: %s" % cnt_exist)
 
-# get the video urls from the link
-def get_video_urls(link):
+# get the file urls from the link
+def get_file_urls(link):
     print("\nProcessing url: '%s'" % link)
     
     r = requests.get(link)
     page_source = r.text.split('\n')
-    video_urls = []
+    file_urls = []
     # pattern_hd = '"(https?:\\\\?\/\\\\?\/[^"(]*720P_[^"]*\.mp4[^"]*)"'
-    pattern = '"(https?:\\\\?\/\\\\?\/[^"(]*\.mp4[^"]*)"'
+    pattern_mp4 = '"(https?:\\\\?\/\\\\?\/[^"(]*\.mp4[^"]*)"'
+    pattern_jpg = '"(https?:\\\\?\/\\\\?\/[^"(]*\.jpg[^"]*)"'
 
     for row in page_source:
-        matches = re.findall(pattern, row)
+        matches = re.findall(pattern_mp4, row)
         p720_found = False
         p480_found = False
         selected_url = ""
 
-        for match in matches:
-            matched_url = match.replace("\/", "/")
-            if "720P_" in match:
-                selected_url = matched_url
-            elif "480P_" in match:
-                p480_found = True
-                if not p720_found:
+        if matches:
+            # find mp4 files
+            for match in matches:
+                matched_url = match.replace("\/", "/")
+                if "720P_" in match:
                     selected_url = matched_url
-            elif "240P_" in match:
-                continue
-            else:
-                selected_url = matched_url
+                elif "480P_" in match:
+                    p480_found = True
+                    if not p720_found:
+                        selected_url = matched_url
+                elif "240P_" in match:
+                    continue
+                else:
+                    selected_url = matched_url
+            if selected_url:
+                # print("selected_url = " + selected_url)
+                file_urls.append(selected_url)
+        else:
+            # find jpg files
+            matches = re.findall(pattern_jpg, row)
+            for match in matches:
+                matched_url = match.replace("\/", "/")
+                file_urls.append(matched_url)
 
-        if selected_url:
-            # print("selected_url = " + selected_url)
-            video_urls.append(selected_url)
+    return file_urls
 
-    return video_urls
-
-# save the video files to a specific location
-def save_video_files(urls):
+# save the files to a specific location
+def save_files(urls):
     for url in urls:
         try:
-            save_video_file(url)
+            save_file(url)
         except:
             continue
 
-# save a single video file from the url
-def save_video_file(url):
+# save a single file from the url
+def save_file(url):
     global idx
     global cnt_success
     global cnt_failed
     global cnt_exist
 
-    idx += 1
-    source = 'Normal'
-    if ".com/preview" in url or ".com/samples" in url:
-        pattern = '(preview|samples)\/(.*)\/sample\.mp4'
-        source = 'FJSM'
-    elif "uralesbian" in url:
-        pattern = '(tour\/)(.*)\/sample\.mp4'
-        source = 'UL'
-    elif "lollipopgirls" in url:
-        pattern = '(scenes\/)(.*)\/sample\.mp4'
-        source = 'LG'
-    else:
-        pattern = '([^"^(]*/)*([^"^(]*\.mp4).*'
-    match = re.search(pattern, url)
-    if match:
-        if source == 'FJSM':
-            file_name = match.group(2) + '.mp4'
-            file_path = DOWNLOAD_PATH + 'fjsm/' + file_name
-        elif source == 'UL':
-            file_name = 'uralesbian_' + match.group(2) + '.mp4'
-            file_path = DOWNLOAD_PATH + 'fjsm/' + file_name
-        elif source == 'LG':
-            file_name = 'lollipopgirls_' + match.group(2) + '.mp4'
-            file_path = DOWNLOAD_PATH + 'fjsm/' + file_name
+    if ".mp4" in url:
+        # download a single mp4 file
+        idx += 1
+        source = 'Normal'
+        if ".com/preview" in url or ".com/samples" in url:
+            pattern = '(preview|samples)\/(.*)\/sample\.mp4'
+            source = 'FJSM'
+        elif "uralesbian" in url:
+            pattern = '(tour\/)(.*)\/sample\.mp4'
+            source = 'UL'
+        elif "lollipopgirls" in url:
+            pattern = '(scenes\/)(.*)\/sample\.mp4'
+            source = 'LG'
         else:
-            file_name = match.group(2)
-            file_path = DOWNLOAD_PATH + file_name
-        # print(file_path)
-        now = datetime.now().strftime("%H:%M:%S")
+            pattern = '([^"^(]*/)*([^"^(]*\.mp4).*'
+        match = re.search(pattern, url)
+        if match:
+            if source == 'FJSM':
+                file_name = match.group(2) + '.mp4'
+                file_path = DOWNLOAD_PATH + 'fjsm/' + file_name
+            elif source == 'UL':
+                file_name = 'uralesbian_' + match.group(2) + '.mp4'
+                file_path = DOWNLOAD_PATH + 'fjsm/' + file_name
+            elif source == 'LG':
+                file_name = 'lollipopgirls_' + match.group(2) + '.mp4'
+                file_path = DOWNLOAD_PATH + 'fjsm/' + file_name
+            else:
+                file_name = match.group(2)
+                file_path = DOWNLOAD_PATH + file_name
+            # print(file_path)
+            now = datetime.now().strftime("%H:%M:%S")
+            print("[%s] file url: '%s'" % (now, url))
 
-        print("[%s] Video url: '%s'" % (now, url))
+            if os.path.exists(file_path):
+                cnt_exist += 1
+                print("[%s] %d: The file '%s' already exists!" % (now, idx, file_name))
+            else:
+                print("[%s] %d: Downloading '%s'..." % (now, idx, file_name), end="")
+
+                try:
+                    r = requests.get(url, verify=False)
+                    if r.status_code == 200:
+                        with open(file_path, 'wb') as f:
+                            f.write(r.content)
+                            print(" Completed!")
+                            cnt_success += 1
+                    else:
+                        cnt_failed += 1
+                except Exception as e:
+                    print("\nException with url: <%s>, file name: <%s>" % (url, file_name))
+                    # print(e)
+                    raise 
+
+        else:
+            print("No valid file found!")
+        
+    else:
+        # download a single jpg file
+        if "thumb" in url:
+            return
+            
+        idx += 1
+        pattern_jpg = '\/([^\/]+\/[^\/]+.jpg)$'
+        match_jpg = re.search(pattern_jpg, url)
+        jpg_name = match_jpg.group(1).replace("/", "_")
+        file_path = DOWNLOAD_PATH + 'pic/misc/' + jpg_name
+        now = datetime.now().strftime("%H:%M:%S")
+        print("[%s] file url: '%s'" % (now, url))
 
         if os.path.exists(file_path):
             cnt_exist += 1
-            print("[%s] %d: The file '%s' already exists!" % (now, idx, file_name))
+            print("[%s] %d: The file '%s' already exists!" % (now, idx, jpg_name))
         else:
-            print("[%s] %d: Downloading '%s'..." % (now, idx, file_name), end="")
+            print("[%s] %d: Downloading '%s'..." % (now, idx, jpg_name), end="")
 
             try:
                 r = requests.get(url, verify=False)
@@ -144,12 +189,9 @@ def save_video_file(url):
                 else:
                     cnt_failed += 1
             except Exception as e:
-                print("\nException with url: <%s>, file name: <%s>" % (url, file_name))
+                print("\nException with url: <%s>, file name: <%s>" % (url, jpg_name))
                 # print(e)
                 raise 
-
-    else:
-        print("No valid video found!")
 
 # download all possible video files from bookmarks
 def download_videos(days):
@@ -175,7 +217,7 @@ def download_videos(days):
         cursor.close()
 
 # download all possible pictures files from url
-def download_pics(url):
+def download_group_pics(url):
     pattern_with_leadingno_group  = '(http.*\/()(\d+)((_|-).*?)\/(.*?)-)(\d+).jpg'
     pattern_with_scene_group      = '(http.*\/.*?(-|_)scene(\d+)()()\/(.*?)-)(\d+).jpg'
     pattern_with_onlyno_group     = '(http.*\/()(\d+)()()\/(.*?)-)(\d+).jpg'
@@ -307,24 +349,30 @@ cnt_exist = 0
 start = time.time()
 
 if n == 1:
+    # Download from bookmark db
     download_videos(1)
 else:
     arg = sys.argv[1]
     if arg.isnumeric():
+        # Download from bookmark db back to days
         days = int(arg)
         download_videos(days)
     elif "http" in arg:
+        # Download from the given url
         url = arg
         if ".mp4" in url:
-            save_video_file(url)
+            # Download a single mp4 file
+            save_file(url)
         elif ".jpg" in url:
-            download_pics(url)
+            # Download jpg files with the similar group/file names
+            download_group_pics(url)
         else:
-            video_list = get_video_urls(url)
-            if video_list:
-                save_video_files(video_list)
+            # Url doesn't contain mp4/jpg directly, needs to open the link and check the page source for possible mp4/jpg files
+            file_list = get_file_urls(url)
+            if file_list:
+                save_files(file_list)
             else:
-                print("No valid video found!")
+                print("No valid file found!")
     elif ".mp4" in arg:
         isAudioIncluded(arg)
     else:
