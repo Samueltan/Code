@@ -25,7 +25,8 @@ def execute_query(cursor, query):
     try:
         cursor.execute(query)
     except Exception as error:
-        print(str(error) + "\n " + query)
+        if log:
+            print(str(error) + "\n " + query)
 
 # get bookmarks from firefox sqlite database file and print all
 def process_bookmarks(cursor, timestamp):
@@ -34,7 +35,8 @@ def process_bookmarks(cursor, timestamp):
         where moz_bookmarks.dateAdded >= {}
         and moz_places.url like 'http%'
         order by dateAdded desc;""".format(timestamp)
-    # print(bookmarks_query)
+    if log:
+        print(bookmarks_query)
 
     execute_query(cursor, bookmarks_query)
     for row in cursor:
@@ -134,15 +136,16 @@ def save_file(url):
             else:
                 file_name = match.group(2)
                 file_path = DOWNLOAD_PATH + file_name
-            # print(file_path)
+
+            if log:
+                print(file_path)
             now = datetime.now().strftime("%H:%M:%S")
-            print("[%s] file url: '%s'" % (now, url))
 
             if os.path.exists(file_path):
                 cnt_exist += 1
                 print("[%s] %d: The file '%s' already exists!" % (now, idx, file_name))
             else:
-                print("[%s] %d: Downloading '%s'..." % (now, idx, file_name), end="")
+                print("[%s] %d: Downloading '%s' as file '%s' ..." % (now, idx, url, file_name), end="")
 
                 try:
                     r = requests.get(url, verify=False)
@@ -177,13 +180,15 @@ def save_file(url):
         jpg_name = match_jpg.group(1).replace("/", "_")
         file_path = DOWNLOAD_PATH + 'pic/misc/' + jpg_name
         now = datetime.now().strftime("%H:%M:%S")
-        print("[%s] file url: '%s'" % (now, url))
+
+        if log:
+            print("[%s] file url: '%s'" % (now, url))
 
         if os.path.exists(file_path):
             cnt_exist += 1
             print("[%s] %d: The file '%s' already exists!" % (now, idx, jpg_name))
         else:
-            print("[%s] %d: Downloading '%s'..." % (now, idx, jpg_name), end="")
+            print("[%s] %d: Downloading '%s' as '%s' ..." % (now, idx, url, jpg_name), end="")
 
             try:
                 r = requests.get(url, verify=False)
@@ -244,11 +249,13 @@ def download_group_pics(url):
             group = match.group(3)
             name = match.group(6) if match.group(6) else ""
             index = match.group(8)
+
             folder = DOWNLOAD_PATH + 'pic/' + name if name else DOWNLOAD_PATH + 'pic/' + group
             Path(folder).mkdir(parents=True, exist_ok=True)
-            # print('full_prefix = ' + full_prefix)
-            # print('folder = ' + folder)
-            # print('name = ' + name)
+            if log:
+                print('full_prefix = ' + full_prefix)
+                print('folder = ' + folder)
+                print('name = ' + name)
 
             save_pics(full_prefix, group, name, index)
             break
@@ -256,7 +263,6 @@ def download_group_pics(url):
 # save pics based on group id and file name
 def save_pics(full_prefix, group, name, index):
     # Save pics from current group number back to possible decreasing group number until failed or group number 1
-    # print('group = ' + group)
     if group:
         gi = int(group) + 1 if group.isnumeric() else 1
     else:
@@ -302,50 +308,53 @@ def save_group(full_prefix, group, name, index, gi, cnt, fail):
                     file_name = name + '-' + suffix if name else suffix
             else:
                 file_name = name + '-' + str(i).zfill(3)
+            file_name = file_name.replace('/', '_')
             folder = DOWNLOAD_PATH + 'pic/' + name if name else DOWNLOAD_PATH + 'pic/' + group
             full_file_path = folder + '/' + file_name + '.jpg'
-            # print('file_name = ' + file_name)
+            if log:
+                print('file_name = ' + file_name)
 
             if os.path.exists(full_file_path):
                 cnt += 1
                 print("[%s] %d: The file '%s' already exists!" % (now, cnt, file_name))
             else:
                 if group and group.isnumeric():
-                    pattern_digit = '/[^/]*?(\d+)[^/]*\/' + name + '-$' if name else '/[^/]*?(\d+)[^/]*\/' + '$'
-                    # print('gi = ' + str(gi))
-                    # print('pattern_digit = ' + pattern_digit)
-                    # print('full_prefix1 = ' + full_prefix)
+                    pattern_digit = '/[^/]*?(\d+)[^/]*\/' + name + '(-|_)?$' if name else '/[^/]*?(\d+)[^/]*\/' + '$'
                     match_digit = re.search(pattern_digit, full_prefix)
                     zero_width = len(group) - len(str(int(group)))
                     group_new = str(gi).zfill(len(str(gi)) + zero_width)
                     group_new_zfilled = str(gi).zfill(len(group))
-                    # print('group_new = ' + group_new)
+                    if log:
+                        print('gi = ' + str(gi))
+                        print('pattern_digit = ' + pattern_digit)
+                        print('full_prefix1 = ' + full_prefix)
+                        print('group_new = ' + group_new)
                     full_prefix = full_prefix.replace(match_digit.group(1), group_new)
                     full_prefix_zfilled = full_prefix.replace(match_digit.group(1), group_new_zfilled)
-                    # print('full_prefix2 = ' + full_prefix)
 
                 current_url = full_prefix + str(i) + '.jpg'
                 current_url_zfilled = full_prefix_zfilled + str(i).zfill(len(index)) + '.jpg'
-                # print('full_prefix = ' + full_prefix)
-                # print('current_url = ' + current_url)
-                # print('current_url_zfilled = ' + current_url_zfilled)
+                if log:
+                    print('full_prefix = ' + full_prefix)
+                    print('current_url = ' + current_url)
+                    print('current_url_zfilled = ' + current_url_zfilled)
 
-                # print("gi = %d, current_url = %s" % (gi, current_url))
+                    print("gi = %d, current_url = %s" % (gi, current_url))
                 r = requests.get(current_url, allow_redirects=False)
                 if r.status_code == 200:
                     group_fail = 0
                     cnt += 1
-                    print("[%s] %d: Downloading '%s'..." % (now, cnt, file_name), end="")
+                    print("[%s] %d: Downloading '%s' as '%s' ..." % (now, cnt, current_url, file_name), end="")
                     with open(full_file_path, 'wb') as f:
                         f.write(r.content)
                         print(" Completed!")
                 else:
-                    # print("gi = %d, current_url_zfilled = %s" % (gi, current_url_zfilled))
+                    print("gi = %d, current_url_zfilled = %s" % (gi, current_url_zfilled))
                     r = requests.get(current_url_zfilled, allow_redirects=False)
                     if r.status_code == 200:
                         group_fail = 0
                         cnt += 1
-                        print("[%s] %d: Downloading '%s'..." % (now, cnt, file_name), end="")
+                        print("[%s] %d: Downloading '%s' as '%s'..." % (now, cnt, current_url, file_name), end="")
                         with open(full_file_path, 'wb') as f:
                             f.write(r.content)
                             print(" Completed!")
@@ -374,6 +383,7 @@ cnt_success = 0
 cnt_failed = 0
 cnt_exist = 0
 start = time.time()
+log = False
 
 if n == 1:
     # Download from bookmark db
