@@ -167,7 +167,7 @@ def save_file(url):
             return
 
         file_size = urllib.request.urlopen(url).length
-        if file_size < 80000:
+        if file_size < 50000:
             print("Small file is ignored..")
             return
 
@@ -224,10 +224,10 @@ def download_videos(days):
 
 # download all possible pictures files from url
 def download_group_pics(url):
-    pattern_with_leadingno_group  = '(http.*\/()(\d+)((_|-).*?)\/(.*?)(_|-))(\d+).jpg'
-    pattern_with_scene_group      = '(http.*\/.*?(-|_)scene(\d+)()()\/(.*?)(_|-))(\d+).jpg'
-    pattern_with_onlyno_group     = '(http.*\/()(\d+)()()\/(.*?)(_|-))(\d+).jpg'
-    pattern_no_digit_group        = '(http.*\/()([^\d]*?)()()\/(.*?)(_|-))(\d+).jpg'
+    pattern_with_leadingno_group  = '(http.*\/()(\d+)((_|-).*?)\/(.*?)(_|-)?)(\d+).jpg'
+    pattern_with_scene_group      = '(http.*\/.*?(-|_)scene(\d+)()()\/(.*?)(_|-)?)(\d+).jpg'
+    pattern_with_onlyno_group     = '(http.*\/()(\d+)()()\/(.*?)(_|-)?)(\d+).jpg'
+    pattern_no_digit_group        = '(http.*\/()([^\d]*?)()()\/(.*?)(_|-)?)(\d+).jpg'
 
     pic_patterns = [
         pattern_with_leadingno_group,
@@ -242,9 +242,9 @@ def download_group_pics(url):
         if match:
             full_prefix = match.group(1)
             group = match.group(3)
-            name = match.group(6)
+            name = match.group(6) if match.group(6) else ""
             index = match.group(8)
-            folder = DOWNLOAD_PATH + 'pic/' + name
+            folder = DOWNLOAD_PATH + 'pic/' + name if name else DOWNLOAD_PATH + 'pic/' + group
             Path(folder).mkdir(parents=True, exist_ok=True)
             # print('full_prefix = ' + full_prefix)
             # print('folder = ' + folder)
@@ -295,12 +295,14 @@ def save_group(full_prefix, group, name, index, gi, cnt, fail):
             now = datetime.now().strftime("%H:%M:%S")
             if group:
                 if group.isnumeric():
-                    file_name = name + '-' + str(gi).zfill(3) + str(i).zfill(3)
+                    suffix = str(gi).zfill(3) + str(i).zfill(3)
+                    file_name = name + '-' + suffix if name else suffix
                 else:
-                    file_name = name + '-' + group + '-' + str(i).zfill(3)
+                    suffix = group + '-' + str(i).zfill(3)
+                    file_name = name + '-' + suffix if name else suffix
             else:
                 file_name = name + '-' + str(i).zfill(3)
-            folder = DOWNLOAD_PATH + 'pic/' + name
+            folder = DOWNLOAD_PATH + 'pic/' + name if name else DOWNLOAD_PATH + 'pic/' + group
             full_file_path = folder + '/' + file_name + '.jpg'
             # print('file_name = ' + file_name)
 
@@ -309,7 +311,7 @@ def save_group(full_prefix, group, name, index, gi, cnt, fail):
                 print("[%s] %d: The file '%s' already exists!" % (now, cnt, file_name))
             else:
                 if group and group.isnumeric():
-                    pattern_digit = '/[^/]*?(\d+)[^/]*\/' + name + '-$'
+                    pattern_digit = '/[^/]*?(\d+)[^/]*\/' + name + '-$' if name else '/[^/]*?(\d+)[^/]*\/' + '$'
                     # print('gi = ' + str(gi))
                     # print('pattern_digit = ' + pattern_digit)
                     # print('full_prefix1 = ' + full_prefix)
