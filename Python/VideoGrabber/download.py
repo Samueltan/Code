@@ -10,6 +10,7 @@ from datetime import datetime
 from datetime import timedelta 
 import urllib3
 from pathlib import Path
+import urllib.request
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -164,7 +165,12 @@ def save_file(url):
         # download a single jpg file
         if "thumb" in url:
             return
-            
+
+        file_size = urllib.request.urlopen(url).length
+        if file_size < 80000:
+            print("Small file is ignored..")
+            return
+
         idx += 1
         pattern_jpg = '\/([^\/]+\/[^\/]+.jpg)$'
         match_jpg = re.search(pattern_jpg, url)
@@ -218,10 +224,10 @@ def download_videos(days):
 
 # download all possible pictures files from url
 def download_group_pics(url):
-    pattern_with_leadingno_group  = '(http.*\/()(\d+)((_|-).*?)\/(.*?)-)(\d+).jpg'
-    pattern_with_scene_group      = '(http.*\/.*?(-|_)scene(\d+)()()\/(.*?)-)(\d+).jpg'
-    pattern_with_onlyno_group     = '(http.*\/()(\d+)()()\/(.*?)-)(\d+).jpg'
-    pattern_no_digit_group        = '(http.*\/()([^\d]*?)()()\/(.*?)-)(\d+).jpg'
+    pattern_with_leadingno_group  = '(http.*\/()(\d+)((_|-).*?)\/(.*?)(_|-))(\d+).jpg'
+    pattern_with_scene_group      = '(http.*\/.*?(-|_)scene(\d+)()()\/(.*?)(_|-))(\d+).jpg'
+    pattern_with_onlyno_group     = '(http.*\/()(\d+)()()\/(.*?)(_|-))(\d+).jpg'
+    pattern_no_digit_group        = '(http.*\/()([^\d]*?)()()\/(.*?)(_|-))(\d+).jpg'
 
     pic_patterns = [
         pattern_with_leadingno_group,
@@ -237,17 +243,18 @@ def download_group_pics(url):
             full_prefix = match.group(1)
             group = match.group(3)
             name = match.group(6)
+            index = match.group(8)
             folder = DOWNLOAD_PATH + 'pic/' + name
             Path(folder).mkdir(parents=True, exist_ok=True)
             # print('full_prefix = ' + full_prefix)
             # print('folder = ' + folder)
             # print('name = ' + name)
 
-            save_pics(full_prefix, group, name)
+            save_pics(full_prefix, group, name, index)
             break
 
 # save pics based on group id and file name
-def save_pics(full_prefix, group, name):
+def save_pics(full_prefix, group, name, index):
     # Save pics from current group number back to possible decreasing group number until failed or group number 1
     # print('group = ' + group)
     if group:
@@ -258,7 +265,7 @@ def save_pics(full_prefix, group, name):
     fail = 0
     while gi >= 1:
         gi -= 1
-        cnt, fail = save_group(full_prefix, group, name, gi, cnt, fail)
+        cnt, fail = save_group(full_prefix, group, name, index, gi, cnt, fail)
 
         if not group or not group.isnumeric() or fail > 1:
             break
@@ -270,19 +277,21 @@ def save_pics(full_prefix, group, name):
         gi = 0
     while group and group.isnumeric():
         gi += 1
-        cnt, fail = save_group(full_prefix, group, name, gi, cnt, fail)
+        cnt, fail = save_group(full_prefix, group, name, index, gi, cnt, fail)
 
         if fail > 1:
             break
 
 #
-def save_group(full_prefix, group, name, gi, cnt, fail):
+def save_group(full_prefix, group, name, index, gi, cnt, fail):
     i = 0
     group_fail = fail
     while True:
         try:
             i += 1
             current_url = ''
+            current_url_zfilled = ''
+            full_prefix_zfilled = full_prefix
             now = datetime.now().strftime("%H:%M:%S")
             if group:
                 if group.isnumeric():
@@ -307,11 +316,17 @@ def save_group(full_prefix, group, name, gi, cnt, fail):
                     match_digit = re.search(pattern_digit, full_prefix)
                     zero_width = len(group) - len(str(int(group)))
                     group_new = str(gi).zfill(len(str(gi)) + zero_width)
+                    group_new_zfilled = str(gi).zfill(len(group))
                     # print('group_new = ' + group_new)
                     full_prefix = full_prefix.replace(match_digit.group(1), group_new)
+                    full_prefix_zfilled = full_prefix.replace(match_digit.group(1), group_new_zfilled)
                     # print('full_prefix2 = ' + full_prefix)
 
                 current_url = full_prefix + str(i) + '.jpg'
+                current_url_zfilled = full_prefix_zfilled + str(i).zfill(len(index)) + '.jpg'
+                # print('full_prefix = ' + full_prefix)
+                # print('current_url = ' + current_url)
+                # print('current_url_zfilled = ' + current_url_zfilled)
 
                 # print("gi = %d, current_url = %s" % (gi, current_url))
                 r = requests.get(current_url, allow_redirects=False)
@@ -323,8 +338,18 @@ def save_group(full_prefix, group, name, gi, cnt, fail):
                         f.write(r.content)
                         print(" Completed!")
                 else:
-                    group_fail += 1
-                    break
+                    # print("gi = %d, current_url_zfilled = %s" % (gi, current_url_zfilled))
+                    r = requests.get(current_url_zfilled, allow_redirects=False)
+                    if r.status_code == 200:
+                        group_fail = 0
+                        cnt += 1
+                        print("[%s] %d: Downloading '%s'..." % (now, cnt, file_name), end="")
+                        with open(full_file_path, 'wb') as f:
+                            f.write(r.content)
+                            print(" Completed!")
+                    else:
+                        group_fail += 1
+                        break
         except Exception as e:
             print("\nException with url: <%s>, file name: <%s>" % (current_url, file_name))
             # print(e)
