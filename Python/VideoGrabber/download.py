@@ -57,9 +57,12 @@ def get_file_urls(link):
     page_source = r.text.split('\n')
     file_urls = []
     # pattern_hd = '"(https?:\\\\?\/\\\\?\/[^"(]*720P_[^"]*\.mp4[^"]*)"'
-    pattern_mp4 = '"(https?:\\\\?\/\\\\?\/[^"(]*\.mp4[^"]*)"'
-    pattern_jpg = '"(https?:\\\\?\/\\\\?\/[^"(]*\.jpg[^"]*)"'
+    pattern_mp4 = '["\'](https?:\\\\?\/\\\\?\/[^"\'(]*\.mp4[^\'"]*)["\']'
+    pattern_jpg = '["\'](https?:\\\\?\/\\\\?\/[^"\\\'(]*\.jpg[^\\\'"]*)["\']'
+    # pattern_jpg = '\'(https?:\\\\?\/\\\\?\/[^"\'(]*\.jpg[^\'"]*)\''
 
+    if log:
+        print('pattern_jpg: ' + pattern_jpg)
     for row in page_source:
         matches = re.findall(pattern_mp4, row)
         p720_found = False
@@ -143,9 +146,9 @@ def save_file(url):
 
             if os.path.exists(file_path):
                 cnt_exist += 1
-                print("[%s] %d: The file '%s' already exists!" % (now, idx, file_name))
+                print("[%s] %d: The file '%s' already exists!" % (now, idx, file_path))
             else:
-                print("[%s] %d: Downloading '%s' as file '%s' ..." % (now, idx, url, file_name), end="")
+                print("[%s] %d: Downloading '%s' as file '%s' ..." % (now, idx, url, file_path), end="")
 
                 try:
                     r = requests.get(url, verify=False)
@@ -186,9 +189,9 @@ def save_file(url):
 
         if os.path.exists(file_path):
             cnt_exist += 1
-            print("[%s] %d: The file '%s' already exists!" % (now, idx, jpg_name))
+            print("[%s] %d: The file '%s' already exists!" % (now, idx, file_path))
         else:
-            print("[%s] %d: Downloading '%s' as '%s' ..." % (now, idx, url, jpg_name), end="")
+            print("[%s] %d: Downloading '%s' as '%s' ..." % (now, idx, url, file_path), end="")
 
             try:
                 r = requests.get(url, verify=False)
@@ -316,7 +319,7 @@ def save_group(full_prefix, group, name, index, gi, cnt, fail):
 
             if os.path.exists(full_file_path):
                 cnt += 1
-                print("[%s] %d: The file '%s' already exists!" % (now, cnt, file_name))
+                print("[%s] %d: The file '%s' already exists!" % (now, cnt, full_file_path))
             else:
                 if group and group.isnumeric():
                     pattern_digit = '/[^/]*?(\d+)[^/]*\/' + name + '(-|_)?$' if name else '/[^/]*?(\d+)[^/]*\/' + '$'
@@ -344,7 +347,7 @@ def save_group(full_prefix, group, name, index, gi, cnt, fail):
                 if r.status_code == 200:
                     group_fail = 0
                     cnt += 1
-                    print("[%s] %d: Downloading '%s' as '%s' ..." % (now, cnt, current_url, file_name), end="")
+                    print("[%s] %d: Downloading '%s' as '%s' ..." % (now, cnt, current_url, full_file_path), end="")
                     with open(full_file_path, 'wb') as f:
                         f.write(r.content)
                         print(" Completed!")
@@ -354,7 +357,7 @@ def save_group(full_prefix, group, name, index, gi, cnt, fail):
                     if r.status_code == 200:
                         group_fail = 0
                         cnt += 1
-                        print("[%s] %d: Downloading '%s' as '%s'..." % (now, cnt, current_url, file_name), end="")
+                        print("[%s] %d: Downloading '%s' as '%s'..." % (now, cnt, current_url, full_file_path), end="")
                         with open(full_file_path, 'wb') as f:
                             f.write(r.content)
                             print(" Completed!")
