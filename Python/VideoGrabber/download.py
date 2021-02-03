@@ -124,12 +124,12 @@ def save_file(url):
             pattern = '(scenes\/)(.*)\/sample\.mp4'
             source = 'LG'
         else:
-            pattern = '([^"^(]*/)*([^"^(]*\.mp4).*'
+            pattern = '([^"\'\/(]*\/)*\/([^"\'\/(]+?\/[^"\'\/(]*\.mp4).*'
         match = re.search(pattern, url)
         if match:
             if source == 'FJSM':
                 file_name = match.group(2) + '.mp4'
-                file_path = DOWNLOAD_PATH + 'fjsm/' + file_name
+                file_path = DOWNLOAD_PATH + 'fjsm/'
             elif source == 'UL':
                 file_name = 'uralesbian_' + match.group(2) + '.mp4'
                 file_path = DOWNLOAD_PATH + 'fjsm/' + file_name
@@ -137,7 +137,9 @@ def save_file(url):
                 file_name = 'lollipopgirls_' + match.group(2) + '.mp4'
                 file_path = DOWNLOAD_PATH + 'fjsm/' + file_name
             else:
-                file_name = match.group(2)
+                file_name = match.group(2).replace('/', '_')
+                if log:
+                    print('file_name = ' + file_name)
                 file_path = DOWNLOAD_PATH + file_name
 
             if log:
@@ -274,7 +276,7 @@ def save_pics(full_prefix, group, name, index):
     fail = 0
     while gi >= 1:
         gi -= 1
-        cnt, fail = save_group(full_prefix, group, name, index, gi, cnt, fail)
+        cnt, fail = save_pic_group(full_prefix, group, name, index, gi, cnt, fail)
 
         if not group or not group.isnumeric() or fail > 1:
             break
@@ -286,13 +288,13 @@ def save_pics(full_prefix, group, name, index):
         gi = 0
     while group and group.isnumeric():
         gi += 1
-        cnt, fail = save_group(full_prefix, group, name, index, gi, cnt, fail)
+        cnt, fail = save_pic_group(full_prefix, group, name, index, gi, cnt, fail)
 
         if fail > 1:
             break
 
 #
-def save_group(full_prefix, group, name, index, gi, cnt, fail):
+def save_pic_group(full_prefix, group, name, index, gi, cnt, fail):
     i = 0
     group_fail = fail
     while True:
@@ -305,10 +307,10 @@ def save_group(full_prefix, group, name, index, gi, cnt, fail):
             if group:
                 if group.isnumeric():
                     suffix = str(gi).zfill(3) + str(i).zfill(3)
-                    file_name = name + '-' + suffix if name else suffix
                 else:
                     suffix = group + '-' + str(i).zfill(3)
-                    file_name = name + '-' + suffix if name else suffix
+
+                file_name = name + '-' + suffix if name else suffix
             else:
                 file_name = name + '-' + str(i).zfill(3)
             file_name = file_name.replace('/', '_')
@@ -352,7 +354,8 @@ def save_group(full_prefix, group, name, index, gi, cnt, fail):
                         f.write(r.content)
                         print(" Completed!")
                 else:
-                    print("gi = %d, current_url_zfilled = %s" % (gi, current_url_zfilled))
+                    if log:
+                        print("gi = %d, current_url_zfilled = %s" % (gi, current_url_zfilled))
                     r = requests.get(current_url_zfilled, allow_redirects=False)
                     if r.status_code == 200:
                         group_fail = 0
