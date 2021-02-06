@@ -62,29 +62,37 @@ def get_file_urls(link):
     # pattern_jpg = '\'(https?:\\\\?\/\\\\?\/[^"\'(]*\.jpg[^\'"]*)\''
 
     if log:
-        print('pattern_jpg: ' + pattern_jpg)
+        print("pattern_jpg: " + pattern_jpg)
     for row in page_source:
         matches = re.findall(pattern_mp4, row)
         p720_found = False
         p480_found = False
+        p360_found = False
         selected_url = ""
 
         if matches:
             # find mp4 files
             for match in matches:
                 matched_url = match.replace("\/", "/")
-                if "720P_" in match:
+                if "720P" in match:
+                    p720_found = True
                     selected_url = matched_url
-                elif "480P_" in match:
+                    break
+                elif "480P" in match:
                     p480_found = True
                     if not p720_found:
                         selected_url = matched_url
-                elif "240P_" in match:
+                elif "360P" in match:
+                    p360_found = True
+                    if not p480_found and not p720_found:
+                        selected_url = matched_url
+                elif "240P" in match:
                     continue
                 else:
                     selected_url = matched_url
             if selected_url:
-                # print("selected_url = " + selected_url)
+                if log:
+                    print("selected_url = " + selected_url)
                 file_urls.append(selected_url)
         else:
             # find jpg files
@@ -100,7 +108,8 @@ def save_files(urls):
     for url in urls:
         try:
             save_file(url)
-        except:
+        except Exception as e:
+            print(e)
             continue
 
 # save a single file from the url
@@ -110,7 +119,12 @@ def save_file(url):
     global cnt_failed
     global cnt_exist
 
+    file_size = urllib.request.urlopen(url).length
     if ".mp4" in url:
+        if file_size < 1024 * 1024:
+            print("Small mp4 file is ignored..")
+            return
+
         # download a single mp4 file
         idx += 1
         source = 'Normal'
@@ -139,18 +153,18 @@ def save_file(url):
             else:
                 file_name = match.group(2).replace('/', '_')
                 if log:
-                    print('file_name = ' + file_name)
+                    print("file_name = " + file_name)
                 file_path = DOWNLOAD_PATH + file_name
 
             if log:
-                print(file_path)
+                print("file_path = " + file_path)
             now = datetime.now().strftime("%H:%M:%S")
 
             if os.path.exists(file_path):
                 cnt_exist += 1
                 print("[%s] %d: The file '%s' already exists!" % (now, idx, file_path))
             else:
-                print("[%s] %d: Downloading '%s' as file '%s' ..." % (now, idx, url, file_path), end="")
+                print("[%s] %d: Downloading '%s' as file '%s' ..." % (now, idx, url, file_path), end="", flush=True)
 
                 try:
                     r = requests.get(url, verify=False)
@@ -174,9 +188,8 @@ def save_file(url):
         if "thumb" in url:
             return
 
-        file_size = urllib.request.urlopen(url).length
-        if file_size < 50000:
-            print("Small file is ignored..")
+        if file_size < 50 * 1024:
+            print("Small jpg file is ignored..")
             return
 
         idx += 1
@@ -193,7 +206,7 @@ def save_file(url):
             cnt_exist += 1
             print("[%s] %d: The file '%s' already exists!" % (now, idx, file_path))
         else:
-            print("[%s] %d: Downloading '%s' as '%s' ..." % (now, idx, url, file_path), end="")
+            print("[%s] %d: Downloading '%s' as '%s' ..." % (now, idx, url, file_path), end="", flush=True)
 
             try:
                 r = requests.get(url, verify=False)
@@ -258,9 +271,9 @@ def download_group_pics(url):
             folder = DOWNLOAD_PATH + 'pic/' + name if name else DOWNLOAD_PATH + 'pic/' + group
             Path(folder).mkdir(parents=True, exist_ok=True)
             if log:
-                print('full_prefix = ' + full_prefix)
-                print('folder = ' + folder)
-                print('name = ' + name)
+                print("full_prefix = " + full_prefix)
+                print("folder = " + folder)
+                print("name = " + name)
 
             save_pics(full_prefix, group, name, index)
             break
@@ -317,7 +330,7 @@ def save_pic_group(full_prefix, group, name, index, gi, cnt, fail):
             folder = DOWNLOAD_PATH + 'pic/' + name if name else DOWNLOAD_PATH + 'pic/' + group
             full_file_path = folder + '/' + file_name + '.jpg'
             if log:
-                print('file_name = ' + file_name)
+                print("file_name = " + file_name)
 
             if os.path.exists(full_file_path):
                 cnt += 1
@@ -330,37 +343,39 @@ def save_pic_group(full_prefix, group, name, index, gi, cnt, fail):
                     group_new = str(gi).zfill(len(str(gi)) + zero_width)
                     group_new_zfilled = str(gi).zfill(len(group))
                     if log:
-                        print('gi = ' + str(gi))
-                        print('pattern_digit = ' + pattern_digit)
-                        print('full_prefix1 = ' + full_prefix)
-                        print('group_new = ' + group_new)
+                        print("gi = " + str(gi))
+                        print("pattern_digit = " + pattern_digit)
+                        print("full_prefix1 = " + full_prefix)
+                        print("group_new = " + group_new)
                     full_prefix = full_prefix.replace(match_digit.group(1), group_new)
                     full_prefix_zfilled = full_prefix.replace(match_digit.group(1), group_new_zfilled)
 
                 current_url = full_prefix + str(i) + '.jpg'
                 current_url_zfilled = full_prefix_zfilled + str(i).zfill(len(index)) + '.jpg'
                 if log:
-                    print('full_prefix = ' + full_prefix)
-                    print('current_url = ' + current_url)
-                    print('current_url_zfilled = ' + current_url_zfilled)
+                    print("full_prefix = " + full_prefix)
+                    print("current_url = " + current_url)
+                    print("current_url_zfilled = " + current_url_zfilled)
 
                     print("gi = %d, current_url = %s" % (gi, current_url))
+
+                print("[%s] %d: Downloading '%s' as '%s' ..." % (now, cnt, current_url, full_file_path), end="", flush=True)
                 r = requests.get(current_url, allow_redirects=False)
                 if r.status_code == 200:
                     group_fail = 0
                     cnt += 1
-                    print("[%s] %d: Downloading '%s' as '%s' ..." % (now, cnt, current_url, full_file_path), end="")
                     with open(full_file_path, 'wb') as f:
                         f.write(r.content)
                         print(" Completed!")
                 else:
                     if log:
                         print("gi = %d, current_url_zfilled = %s" % (gi, current_url_zfilled))
+
+                    print("[%s] %d: Downloading '%s' as '%s'..." % (now, cnt, current_url, full_file_path), end="", flush=True)
                     r = requests.get(current_url_zfilled, allow_redirects=False)
                     if r.status_code == 200:
                         group_fail = 0
                         cnt += 1
-                        print("[%s] %d: Downloading '%s' as '%s'..." % (now, cnt, current_url, full_file_path), end="")
                         with open(full_file_path, 'wb') as f:
                             f.write(r.content)
                             print(" Completed!")
@@ -380,7 +395,7 @@ def isAudioIncluded(filename):
 
     # If p['streams'] is not empty, clip has an audio stream
     if p['streams']:
-        print('Video clip has audio!')
+        print("Video clip has audio!")
 
 n = len(sys.argv)
 
