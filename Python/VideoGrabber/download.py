@@ -44,10 +44,6 @@ def process_bookmarks(cursor, timestamp):
         title = row[1]
         file_list = get_file_urls(link)
         save_files(file_list)
-    
-    print("\nSuccessful: %s" % cnt_success)
-    print("Failed: %s" % cnt_failed)
-    print("Already Existed: %s" % cnt_exist)
 
 # get the file urls from the link
 def get_file_urls(link):
@@ -74,26 +70,28 @@ def get_file_urls(link):
             # find mp4 files
             for match in matches:
                 matched_url = match.replace("\/", "/")
-                if "720P" in match:
+
+                if "720P" or "720p" in match:
                     p720_found = True
                     selected_url = matched_url
                     break
-                elif "480P" in match:
+                elif "480P" or "480p"  in match:
                     p480_found = True
                     if not p720_found:
                         selected_url = matched_url
-                elif "360P" in match:
+                elif "360P" or "360p"  in match:
                     p360_found = True
                     if not p480_found and not p720_found:
                         selected_url = matched_url
-                elif "240P" in match:
+                elif "240P" or "240p"  in match:
                     continue
                 else:
                     selected_url = matched_url
             if selected_url:
-                if log:
+                if True:
                     print("selected_url = " + selected_url)
                 file_urls.append(selected_url)
+                
         else:
             # find jpg files
             matches = re.findall(pattern_jpg, row)
@@ -109,7 +107,8 @@ def save_files(urls):
         try:
             save_file(url)
         except Exception as e:
-            print(e)
+            if log:
+                print(e)
             continue
 
 # save a single file from the url
@@ -436,5 +435,8 @@ else:
     else:
         print("Invalid argument!")
 
+print("\nSuccessful: %s" % cnt_success)
+print("Failed: %s" % cnt_failed)
+print("Already Existed: %s" % cnt_exist)
 end = time.time()
 print("Time used: %s Secs" % (end - start))
