@@ -42,23 +42,24 @@ def process_bookmarks(cursor, timestamp):
     for row in cursor:
         link = row[0]
         title = row[1]
-        file_list = get_file_urls(link)
+        file_list = get_mp4_urls(link)
         save_files(file_list)
 
 # get the file urls from the link
-def get_file_urls(link):
-    print("\nProcessing url: '%s'" % link)
+def get_mp4_urls(link):
+    print("Processing url: '%s'" % link)
     
     r = requests.get(link)
     page_source = r.text.split('\n')
-    file_urls = []
+    mp4_urls = []
+    jpg_urls = []
     # pattern_hd = '"(https?:\\\\?\/\\\\?\/[^"(]*720P_[^"]*\.mp4[^"]*)"'
     pattern_mp4 = '["\'](https?:\\\\?\/\\\\?\/[^"\'(]*\.mp4[^\'"]*)["\']'
     pattern_jpg = '["\'](https?:\\\\?\/\\\\?\/[^"\\\'(]*\.jpg[^\\\'"]*)["\']'
     # pattern_jpg = '\'(https?:\\\\?\/\\\\?\/[^"\'(]*\.jpg[^\'"]*)\''
 
     if log:
-        print("pattern_jpg: " + pattern_jpg)
+        print("pattern_mp4: " + pattern_mp4)
     for row in page_source:
         matches = re.findall(pattern_mp4, row)
         p720_found = False
@@ -71,35 +72,33 @@ def get_file_urls(link):
             for match in matches:
                 matched_url = match.replace("\/", "/")
 
-                if "720P" or "720p" in match:
+                if "720P" in match or "720p" in match:
                     p720_found = True
                     selected_url = matched_url
                     break
-                elif "480P" or "480p"  in match:
+                elif "480P" in match or "480p"  in match:
                     p480_found = True
                     if not p720_found:
                         selected_url = matched_url
-                elif "360P" or "360p"  in match:
+                elif "360P" in match or "360p"  in match:
                     p360_found = True
                     if not p480_found and not p720_found:
                         selected_url = matched_url
-                elif "240P" or "240p"  in match:
+                elif "240P" in match or "240p"  in match:
                     continue
                 else:
                     selected_url = matched_url
             if selected_url:
-                if True:
-                    print("selected_url = " + selected_url)
-                file_urls.append(selected_url)
+                mp4_urls.append(selected_url)
                 
         else:
             # find jpg files
             matches = re.findall(pattern_jpg, row)
             for match in matches:
                 matched_url = match.replace("\/", "/")
-                file_urls.append(matched_url)
+                jpg_urls.append(matched_url)
 
-    return file_urls
+    return mp4_urls if len(mp4_urls) != 0 else jpg_urls
 
 # save the files to a specific location
 def save_files(urls):
@@ -188,7 +187,7 @@ def save_file(url):
             return
 
         if file_size < 50 * 1024:
-            print("Small jpg file is ignored..")
+            # print("Small jpg file is ignored..")
             return
 
         idx += 1
@@ -403,6 +402,7 @@ cnt_success = 0
 cnt_failed = 0
 cnt_exist = 0
 start = time.time()
+# log = True
 log = False
 
 if n == 1:
@@ -425,8 +425,13 @@ else:
             download_group_pics(url)
         else:
             # Url doesn't contain mp4/jpg directly, needs to open the link and check the page source for possible mp4/jpg files
-            file_list = get_file_urls(url)
+            file_list = get_mp4_urls(url)
             if file_list:
+                if log:
+                    print("**********************************")
+                    for filename in file_list:
+                        print(filename)
+                    print("**********************************")
                 save_files(file_list)
             else:
                 print("No valid file found!")
