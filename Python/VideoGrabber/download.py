@@ -64,10 +64,13 @@ def get_mp4_urls(link):
         print("pattern_mp4_quoted: " + pattern_mp4_quoted)
     for row in page_source:
         matches_mp4 = re.findall(pattern_mp4_quoted, row)
-        selected_url = ""
 
         if matches_mp4:
             # find mp4 files
+            selected_quality_code = 0
+            selected_mp4_key = ""
+            selected_url = ""
+
             for match_mp4 in matches_mp4:
                 match_mp4 = match_mp4.replace("\/", "/")
                 pattern_mp4_quality = '/([^"\'(/]*(720P|720p|480P|480p|360P|360p|240P|240p)[^"\'(/]*\.mp4)'
@@ -81,15 +84,18 @@ def get_mp4_urls(link):
                     current_quality_code = 640
                     match_mp4_key = match_mp4.replace(".", "_")
 
-                print("match_mp4_key = " + match_mp4_key)
-                
-                if match_mp4_key in mp4_quality_map:
-                    match_mp4_value = mp4_quality_map.get(match_mp4_key)
-                    existing_quality_code = match_mp4_value[0]
-                    if current_quality_code > existing_quality_code:
-                        mp4_quality_map[match_mp4_key] = current_quality_code, match_mp4
-                else:
-                    mp4_quality_map[match_mp4_key] = current_quality_code, match_mp4
+                if current_quality_code > selected_quality_code:
+                    selected_mp4_key = match_mp4_key
+                    selected_quality_code = current_quality_code
+                    selected_url = match_mp4
+
+            if selected_mp4_key in mp4_quality_map:
+                selected_mp4_value = mp4_quality_map.get(selected_mp4_key)
+                existing_quality_code = selected_mp4_value[0]
+                if selected_quality_code > existing_quality_code:
+                    mp4_quality_map[selected_mp4_key] = selected_quality_code, selected_url
+            else:
+                mp4_quality_map[selected_mp4_key] = selected_quality_code, selected_url
                 
         else:
             # find jpg files
@@ -101,8 +107,9 @@ def get_mp4_urls(link):
     for value in mp4_quality_map.values():
         mp4_urls.append(value[1])
 
-    print(mp4_quality_map)
-    print(mp4_urls)
+    if log:
+        print(mp4_quality_map)
+        print(mp4_urls)
     return mp4_urls if len(mp4_quality_map) != 0 else jpg_urls
 
 # save the files to a specific location
@@ -407,8 +414,8 @@ cnt_success = 0
 cnt_failed = 0
 cnt_exist = 0
 start = time.time()
-log = True
-# log = False
+# log = True
+log = False
 
 if n == 1:
     # Download from bookmark db
@@ -437,7 +444,7 @@ else:
                     for filename in file_list:
                         print(filename)
                     print("**********************************")
-                # save_files(file_list)
+                save_files(file_list)
             else:
                 print("No valid file found!")
     elif ".mp4" in arg:
