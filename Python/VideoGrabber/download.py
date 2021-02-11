@@ -53,52 +53,57 @@ def get_mp4_urls(link):
     page_source = r.text.split('\n')
     mp4_urls = []
     jpg_urls = []
+    mp4_quality_map = {}
     # pattern_hd = '"(https?:\\\\?\/\\\\?\/[^"(]*720P_[^"]*\.mp4[^"]*)"'
-    pattern_mp4 = '["\'](https?:\\\\?\/\\\\?\/[^"\'(]*\.mp4[^\'"]*)["\']'
-    pattern_jpg = '["\'](https?:\\\\?\/\\\\?\/[^"\\\'(]*\.jpg[^\\\'"]*)["\']'
-    # pattern_jpg = '\'(https?:\\\\?\/\\\\?\/[^"\'(]*\.jpg[^\'"]*)\''
+    # pattern_mp4_quoted = '["\'](https?:\\\\?\/\\\\?\/[^"\'(]*\.mp4[^\'"]*)["\']'
+    pattern_mp4 = '(https?:\\\\?\/\\\\?\/[^"\'(]*\.mp4[^"\']*)'
+    pattern_mp4_quoted = '["\']' + pattern_mp4 + '["\']'
+    pattern_jpg_quoted = '["\'](https?:\\\\?\/\\\\?\/[^"\\\'(]*\.jpg[^\\\'"]*)["\']'
 
     if log:
-        print("pattern_mp4: " + pattern_mp4)
+        print("pattern_mp4_quoted: " + pattern_mp4_quoted)
     for row in page_source:
-        matches = re.findall(pattern_mp4, row)
-        p720_found = False
-        p480_found = False
-        p360_found = False
+        matches_mp4 = re.findall(pattern_mp4_quoted, row)
         selected_url = ""
 
-        if matches:
+        if matches_mp4:
             # find mp4 files
-            for match in matches:
-                matched_url = match.replace("\/", "/")
+            for match_mp4 in matches_mp4:
+                match_mp4 = match_mp4.replace("\/", "/")
+                pattern_mp4_quality = '/([^"\'(/]*(720P|720p|480P|480p|360P|360p|240P|240p)[^"\'(/]*\.mp4)'
+                match_quality = re.search(pattern_mp4_quality, match_mp4)
 
-                if "720P" in match or "720p" in match:
-                    p720_found = True
-                    selected_url = matched_url
-                    break
-                elif "480P" in match or "480p"  in match:
-                    p480_found = True
-                    if not p720_found:
-                        selected_url = matched_url
-                elif "360P" in match or "360p"  in match:
-                    p360_found = True
-                    if not p480_found and not p720_found:
-                        selected_url = matched_url
-                elif "240P" in match or "240p"  in match:
-                    continue
+                if match_quality:
+                    current_quality_level = match_quality.group(2)
+                    current_quality_code = int(current_quality_level[:3])
+                    match_mp4_key = match_quality.group(1).replace(current_quality_level, "").replace(".", "_")
                 else:
-                    selected_url = matched_url
-            if selected_url:
-                mp4_urls.append(selected_url)
+                    current_quality_code = 640
+                    match_mp4_key = match_mp4.replace(".", "_")
+
+                print("match_mp4_key = " + match_mp4_key)
+                
+                if match_mp4_key in mp4_quality_map:
+                    match_mp4_value = mp4_quality_map.get(match_mp4_key)
+                    existing_quality_code = match_mp4_value[0]
+                    if current_quality_code > existing_quality_code:
+                        mp4_quality_map[match_mp4_key] = current_quality_code, match_mp4
+                else:
+                    mp4_quality_map[match_mp4_key] = current_quality_code, match_mp4
                 
         else:
             # find jpg files
-            matches = re.findall(pattern_jpg, row)
-            for match in matches:
+            matches_jpg = re.findall(pattern_jpg_quoted, row)
+            for match in matches_jpg:
                 matched_url = match.replace("\/", "/")
                 jpg_urls.append(matched_url)
 
-    return mp4_urls if len(mp4_urls) != 0 else jpg_urls
+    for value in mp4_quality_map.values():
+        mp4_urls.append(value[1])
+
+    print(mp4_quality_map)
+    print(mp4_urls)
+    return mp4_urls if len(mp4_quality_map) != 0 else jpg_urls
 
 # save the files to a specific location
 def save_files(urls):
@@ -191,8 +196,8 @@ def save_file(url):
             return
 
         idx += 1
-        pattern_jpg = '\/([^\/]+\/[^\/]+.jpg)$'
-        match_jpg = re.search(pattern_jpg, url)
+        pattern_jpg_quoted = '\/([^\/]+\/[^\/]+.jpg)$'
+        match_jpg = re.search(pattern_jpg_quoted, url)
         jpg_name = match_jpg.group(1).replace("/", "_")
         file_path = DOWNLOAD_PATH + 'pic/misc/' + jpg_name
         now = datetime.now().strftime("%H:%M:%S")
@@ -402,8 +407,8 @@ cnt_success = 0
 cnt_failed = 0
 cnt_exist = 0
 start = time.time()
-# log = True
-log = False
+log = True
+# log = False
 
 if n == 1:
     # Download from bookmark db
@@ -432,7 +437,7 @@ else:
                     for filename in file_list:
                         print(filename)
                     print("**********************************")
-                save_files(file_list)
+                # save_files(file_list)
             else:
                 print("No valid file found!")
     elif ".mp4" in arg:
