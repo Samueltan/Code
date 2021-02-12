@@ -15,10 +15,13 @@ import urllib.request
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # set the downloading folder
-DOWNLOAD_PATH = '/Users/samueltan/Downloads/download/auto/'
+DOWNLOAD_PATH = "/Users/samueltan/Downloads/download/auto/"
+
+# set the avatar folder
+AVATAR_PATH = "/Users/samueltan/Downloads/download/avatar/"
 
 # set the path of firefox folder with databases
-bookmarks_path = "/Users/samueltan/Library/Application Support/Firefox/Profiles/"
+BOOKMARKS_PATH = "/Users/samueltan/Library/Application Support/Firefox/Profiles/"
 
 # execute a query on sqlite cursor
 def execute_query(cursor, query):
@@ -170,7 +173,7 @@ def save_file(url):
                 print("file_path = " + file_path)
             now = datetime.now().strftime("%H:%M:%S")
 
-            if os.path.exists(file_path):
+            if os.path.exists(file_path) or os.path.exists(AVATAR_PATH + file_name):
                 cnt_exist += 1
                 print("[%s] %d: The file '%s' already exists!" % (now, idx, file_path))
             else:
@@ -237,10 +240,10 @@ def download_videos(days):
     timestamp = datetime.timestamp(datetime.now() - timedelta(days = days)) * 1000 * 1000
 
     # get firefox profile
-    profiles = [i for i in os.listdir(bookmarks_path) if '.default' in i]
+    profiles = [i for i in os.listdir(BOOKMARKS_PATH) if '.default' in i]
 
     # get sqlite database of firefox bookmarks
-    sqlite_path = bookmarks_path+ profiles[0]
+    sqlite_path = BOOKMARKS_PATH+ profiles[0]
     sqlite_db_file_source = sqlite_path + '/places.sqlite'
     sqlite_db_file_dest = sqlite_path + '/places.sqlite copy'
 
@@ -414,7 +417,7 @@ cnt_success = 0
 cnt_failed = 0
 cnt_exist = 0
 start = time.time()
-# log = True
+log = True
 log = False
 
 if n == 1:
