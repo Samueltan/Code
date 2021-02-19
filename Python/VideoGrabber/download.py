@@ -156,51 +156,47 @@ def save_file(url):
             pattern = '(scenes\/)(.*)\/sample\.mp4'
             source = 'LG'
         else:
-            pattern = '([^"\'\/(]*\/)*\/([^"\'\/(]+?\/[^"\'\/(]*\.mp4).*'
+            source = 'OTHER'
         
-        match = re.search(pattern, url)
-        if match:
-            if source == 'FJSM':
-                file_name = match.group(2) + '.mp4'
-                file_path = DOWNLOAD_PATH + 'fjsm/'
-            elif source == 'UL':
-                file_name = 'uralesbian_' + match.group(2) + '.mp4'
-                file_path = DOWNLOAD_PATH + 'fjsm/' + file_name
-            elif source == 'LG':
-                file_name = 'lollipopgirls_' + match.group(2) + '.mp4'
-                file_path = DOWNLOAD_PATH + 'fjsm/' + file_name
-            else:
-                file_name = match.group(2).replace('/', '_')
-                if log:
-                    print("file_name = " + file_name)
-                file_path = DOWNLOAD_PATH + file_name
-
-            if log:
-                print("file_path = " + file_path)
-            now = datetime.now().strftime("%H:%M:%S")
-
-            if os.path.exists(file_path) or os.path.exists(AVATAR_PATH + file_name):
-                cnt_exist += 1
-                print("[%s] %d: The file '%s' already exists!" % (now, idx, file_path))
-            else:
-                print("[%s] %d: Downloading '%s' as file '%s' ..." % (now, idx, url, file_path), end="", flush=True)
-
-                try:
-                    r = requests.get(url, verify=False)
-                    if r.status_code == 200:
-                        with open(file_path, 'wb') as f:
-                            f.write(r.content)
-                            print(" Completed!")
-                            cnt_success += 1
-                    else:
-                        cnt_failed += 1
-                except Exception as e:
-                    print("\nException with url: <%s>, file name: <%s>" % (url, file_name))
-                    # print(e)
-                    raise 
-
+        if source != 'OTHER':
+            match = re.search(pattern, url)
+            if match:
+                if source == 'FJSM':
+                    file_name = match.group(2) + '.mp4'
+                    file_path = DOWNLOAD_PATH + 'fjsm/'
+                elif source == 'UL':
+                    file_name = 'uralesbian_' + match.group(2) + '.mp4'
+                    file_path = DOWNLOAD_PATH + 'fjsm/' + file_name
+                else:
+                    file_name = 'lollipopgirls_' + match.group(2) + '.mp4'
+                    file_path = DOWNLOAD_PATH + 'fjsm/' + file_name
         else:
-            print("No valid file found!")
+            file_name = generateFileName(url)
+            file_path = DOWNLOAD_PATH + file_name
+
+        if log:
+            print("file_path = " + file_path)
+
+        now = datetime.now().strftime("%H:%M:%S")
+        if os.path.exists(file_path) or os.path.exists(AVATAR_PATH + file_name):
+            cnt_exist += 1
+            print("[%s] %d: The file '%s' already exists!" % (now, idx, file_path))
+        else:
+            print("[%s] %d: Downloading '%s' as file '%s' ..." % (now, idx, url, file_path), end="", flush=True)
+
+                # try:
+                #     r = requests.get(url, verify=False)
+                #     if r.status_code == 200:
+                #         with open(file_path, 'wb') as f:
+                #             f.write(r.content)
+                #             print(" Completed!")
+                #             cnt_success += 1
+                #     else:
+                #         cnt_failed += 1
+                # except Exception as e:
+                #     print("\nException with url: <%s>, file name: <%s>" % (url, file_name))
+                #     # print(e)
+                #     raise 
         
     else:
         # download a single jpg file
@@ -240,6 +236,23 @@ def save_file(url):
                 print("\nException with url: <%s>, file name: <%s>" % (url, jpg_name))
                 # print(e)
                 raise 
+
+# generate a proper file name from the url path
+def generateFileName(url):
+    path_segs = url.split("/")
+    digit_len = 0
+    file_name = ""
+    for path_seg in reversed(path_segs):
+        print("path_seg: " + path_seg)
+        digit_len += sum(c.isdigit() for c in path_seg)
+        print("dight_len: " + str(digit_len))
+        file_name = path_seg + "_" + file_name if file_name else path_seg
+        print("file_name: " + str(file_name))
+        if digit_len > 6:
+            break
+
+    return file_name
+
 
 # download all possible video files from bookmarks
 def download_videos(days):
