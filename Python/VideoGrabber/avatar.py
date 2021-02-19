@@ -10,8 +10,6 @@ for root, dirs, files in os.walk(source_location):
         if file.startswith("._") or not file.endswith(".mp4"):
             continue
 
-        if file == "超级美女Amateur Allure Miley is Back - Fantasti.cc videos.mp4":
-            print(os.path.join(root, file))
         # full_path = os.path.join(avatar_location, file)
         # if os.path.exists(full_path):
         #     cnt_exists += 1

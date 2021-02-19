@@ -10,7 +10,7 @@ from datetime import datetime
 from datetime import timedelta 
 import urllib3
 from pathlib import Path
-import urllib.request
+from urllib.request import Request, urlopen
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -52,7 +52,7 @@ def process_bookmarks(cursor, timestamp):
 def get_mp4_urls(link):
     print("Processing url: '%s'" % link)
     
-    r = requests.get(link)
+    r = requests.get(link, verify=False, allow_redirects=False)
     page_source = r.text.split('\n')
     mp4_urls = []
     jpg_urls = []
@@ -75,6 +75,8 @@ def get_mp4_urls(link):
             selected_url = ""
 
             for match_mp4 in matches_mp4:
+                if log:
+                    print("match_mp4: " + match_mp4)
                 match_mp4 = match_mp4.replace("\/", "/")
                 pattern_mp4_quality = '/([^"\'(/]*(720P|720p|480P|480p|360P|360p|240P|240p)[^"\'(/]*\.mp4)'
                 match_quality = re.search(pattern_mp4_quality, match_mp4)
@@ -132,7 +134,10 @@ def save_file(url):
     global cnt_failed
     global cnt_exist
 
-    file_size = urllib.request.urlopen(url).length
+    req = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+    file_size = urlopen(req).length
+    print("file_size: " + str(file_size))
+
     if ".mp4" in url:
         if file_size < 1024 * 1024:
             print("Small mp4 file is ignored..")
@@ -152,6 +157,7 @@ def save_file(url):
             source = 'LG'
         else:
             pattern = '([^"\'\/(]*\/)*\/([^"\'\/(]+?\/[^"\'\/(]*\.mp4).*'
+        
         match = re.search(pattern, url)
         if match:
             if source == 'FJSM':
@@ -385,7 +391,7 @@ def save_pic_group(full_prefix, group, name, index, gi, cnt, fail):
                         print("gi = %d, current_url_zfilled = %s" % (gi, current_url_zfilled))
 
                     print("[%s] %d: Downloading '%s' as '%s'..." % (now, cnt, current_url, full_file_path), end="", flush=True)
-                    r = requests.get(current_url_zfilled, allow_redirects=False)
+                    r = requests.get(current_url_zfilled, verify=False, allow_redirects=False)
                     if r.status_code == 200:
                         group_fail = 0
                         cnt += 1
@@ -418,7 +424,7 @@ cnt_failed = 0
 cnt_exist = 0
 start = time.time()
 log = True
-log = False
+# log = False
 
 if n == 1:
     # Download from bookmark db
