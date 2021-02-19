@@ -15,7 +15,7 @@ from urllib.request import Request, urlopen
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # set the downloading folder
-DOWNLOAD_PATH = "/Users/samueltan/Downloads/download/auto/"
+DOWNLOAD_PATH = "/Users/samueltan/Downloads/download/auto/farm/"
 
 # set the avatar folder
 AVATAR_PATH = "/Users/samueltan/Downloads/download/avatar/"
@@ -136,7 +136,8 @@ def save_file(url):
 
     req = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
     file_size = urlopen(req).length
-    print("file_size: " + str(file_size))
+    if log:
+        print("file_size: " + str(file_size))
 
     if ".mp4" in url:
         if file_size < 1024 * 1024:
@@ -156,23 +157,23 @@ def save_file(url):
             pattern = '(scenes\/)(.*)\/sample\.mp4'
             source = 'LG'
         else:
+            pattern = '([^"\']*\/*\.mp4).*'
             source = 'OTHER'
         
-        if source != 'OTHER':
-            match = re.search(pattern, url)
-            if match:
-                if source == 'FJSM':
-                    file_name = match.group(2) + '.mp4'
-                    file_path = DOWNLOAD_PATH + 'fjsm/'
-                elif source == 'UL':
-                    file_name = 'uralesbian_' + match.group(2) + '.mp4'
-                    file_path = DOWNLOAD_PATH + 'fjsm/' + file_name
-                else:
-                    file_name = 'lollipopgirls_' + match.group(2) + '.mp4'
-                    file_path = DOWNLOAD_PATH + 'fjsm/' + file_name
-        else:
-            file_name = generateFileName(url)
-            file_path = DOWNLOAD_PATH + file_name
+        match = re.search(pattern, url)
+        if match:
+            if source == 'FJSM':
+                file_name = match.group(2) + '.mp4'
+                file_path = DOWNLOAD_PATH + 'fjsm/'
+            elif source == 'UL':
+                file_name = 'uralesbian_' + match.group(2) + '.mp4'
+                file_path = DOWNLOAD_PATH + 'fjsm/' + file_name
+            elif source == 'LG':
+                file_name = 'lollipopgirls_' + match.group(2) + '.mp4'
+                file_path = DOWNLOAD_PATH + 'fjsm/' + file_name
+            else:
+                file_name = generateFileName(match.group(1))
+                file_path = DOWNLOAD_PATH + file_name
 
         if log:
             print("file_path = " + file_path)
@@ -184,19 +185,19 @@ def save_file(url):
         else:
             print("[%s] %d: Downloading '%s' as file '%s' ..." % (now, idx, url, file_path), end="", flush=True)
 
-                # try:
-                #     r = requests.get(url, verify=False)
-                #     if r.status_code == 200:
-                #         with open(file_path, 'wb') as f:
-                #             f.write(r.content)
-                #             print(" Completed!")
-                #             cnt_success += 1
-                #     else:
-                #         cnt_failed += 1
-                # except Exception as e:
-                #     print("\nException with url: <%s>, file name: <%s>" % (url, file_name))
-                #     # print(e)
-                #     raise 
+            try:
+                r = requests.get(url, verify=False)
+                if r.status_code == 200:
+                    with open(file_path, 'wb') as f:
+                        f.write(r.content)
+                        print(" Completed!")
+                        cnt_success += 1
+                else:
+                    cnt_failed += 1
+            except Exception as e:
+                print("\nException with url: <%s>, file name: <%s>" % (url, file_name))
+                # print(e)
+                raise 
         
     else:
         # download a single jpg file
@@ -243,9 +244,7 @@ def generateFileName(url):
     digit_len = 0
     file_name = ""
     for path_seg in reversed(path_segs):
-        print("path_seg: " + path_seg)
         digit_len += sum(c.isdigit() for c in path_seg)
-        print("dight_len: " + str(digit_len))
         file_name = path_seg + "_" + file_name if file_name else path_seg
         print("file_name: " + str(file_name))
         if digit_len > 6:
@@ -437,7 +436,7 @@ cnt_failed = 0
 cnt_exist = 0
 start = time.time()
 log = True
-# log = False
+log = False
 
 if n == 1:
     # Download from bookmark db
