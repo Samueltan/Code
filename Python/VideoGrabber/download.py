@@ -15,13 +15,23 @@ from urllib.request import Request, urlopen
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # set the downloading folder
-DOWNLOAD_PATH = "/Users/samueltan/Downloads/download/auto/farm/"
-
+DOWNLOAD_PATH = "/Users/samueltan/Downloads/download/auto/"
+DOWNLOAD_PATH_FARM = "/Users/samueltan/Downloads/download/auto/farm/"
 # set the avatar folder
-AVATAR_PATH = "/Users/samueltan/Downloads/download/avatar/"
+DOWNLOAD_PATH_AVATAR = "/Users/samueltan/Downloads/download/avatar/"
 
 # set the path of firefox folder with databases
 BOOKMARKS_PATH = "/Users/samueltan/Library/Application Support/Firefox/Profiles/"
+
+idx = 0
+cnt_success = 0
+cnt_failed = 0
+cnt_exist = 0
+start = time.time()
+log = True
+download = False
+log = False
+download = True
 
 # execute a query on sqlite cursor
 def execute_query(cursor, query):
@@ -173,27 +183,31 @@ def save_file(url):
                 file_path = DOWNLOAD_PATH + 'fjsm/' + file_name
             else:
                 file_name = generateFileName(match.group(1))
-                file_path = DOWNLOAD_PATH + file_name
+                if "content_full" in file_name:
+                    file_path = DOWNLOAD_PATH_FARM + file_name
+                else:
+                    file_path = DOWNLOAD_PATH + file_name
 
         if log:
             print("file_path = " + file_path)
 
         now = datetime.now().strftime("%H:%M:%S")
-        if os.path.exists(file_path) or os.path.exists(AVATAR_PATH + file_name):
+        if os.path.exists(file_path) or os.path.exists(DOWNLOAD_PATH_AVATAR + file_name):
             cnt_exist += 1
             print("[%s] %d: The file '%s' already exists!" % (now, idx, file_path))
         else:
             print("[%s] %d: Downloading '%s' as file '%s' ..." % (now, idx, url, file_path), end="", flush=True)
 
             try:
-                r = requests.get(url, verify=False)
-                if r.status_code == 200:
-                    with open(file_path, 'wb') as f:
-                        f.write(r.content)
-                        print(" Completed!")
-                        cnt_success += 1
-                else:
-                    cnt_failed += 1
+                if download:
+                    r = requests.get(url, verify=False)
+                    if r.status_code == 200:
+                        with open(file_path, 'wb') as f:
+                            f.write(r.content)
+                            print(" Completed!")
+                            cnt_success += 1
+                    else:
+                        cnt_failed += 1
             except Exception as e:
                 print("\nException with url: <%s>, file name: <%s>" % (url, file_name))
                 # print(e)
@@ -429,15 +443,6 @@ def isAudioIncluded(filename):
         print("Video clip has audio!")
 
 n = len(sys.argv)
-
-idx = 0
-cnt_success = 0
-cnt_failed = 0
-cnt_exist = 0
-start = time.time()
-log = True
-log = False
-
 if n == 1:
     # Download from bookmark db
     download_videos(1)
