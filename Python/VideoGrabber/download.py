@@ -416,7 +416,7 @@ def save_pic_group(full_prefix, group, name, index, gi, cnt, fail):
 
                     r = requests.get(current_url_zfilled, verify=False, allow_redirects=False)
                     if r.status_code == 200:
-                        print("[%s] %d: Downloading pic '%s' as '%s'..." % (now, cnt, current_url, full_file_path), end="", flush=True)
+                        print("[%s] %d: Downloading pic '%s' as '%s'..." % (now, cnt, current_url_zfilled, full_file_path), end="", flush=True)
                         group_fail = 0
                         cnt += 1
                         with open(full_file_path, 'wb') as f:
