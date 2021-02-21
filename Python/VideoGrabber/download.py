@@ -439,6 +439,19 @@ def isAudioIncluded(filename):
     if p['streams']:
         print("Video clip has audio!")
 
+def getTimeByUnit(dur):
+    if dur < 60:
+        return "00:00:%s" % str(dur)
+    elif dur < 3600:
+        min = int(dur/60)
+        sec = dur - min * 60
+        return "00:%s:%s" % (str(min), str(sec))
+    else:
+        hour = int(dur/3600)
+        min = int((dur - hour * 3600)/60)
+        sec = int(dur - min * 60 - hour * 3600)
+        return "00:%s:%s" % (str(min), str(sec))
+
 n = len(sys.argv)
 if n == 1:
     # Download from bookmark db
@@ -479,4 +492,5 @@ print("\nSuccessful: %s" % cnt_success)
 print("Failed: %s" % cnt_failed)
 print("Already Existed: %s" % cnt_exist)
 end = time.time()
-print("Time used: %s Secs" % (end - start))
+dur = getTimeByUnit(end - start)
+print("Time used: %s" % dur)
