@@ -155,7 +155,6 @@ def save_file(url):
             return
 
         # download a single mp4 file
-        idx += 1
         source = 'Normal'
         if ".com/preview" in url or ".com/samples" in url:
             pattern = '(preview|samples)\/(.*)\/sample\.mp4'
@@ -194,13 +193,14 @@ def save_file(url):
         now = datetime.now().strftime("%H:%M:%S")
         if os.path.exists(file_path) or os.path.exists(DOWNLOAD_PATH_AVATAR + file_name):
             cnt_exist += 1
-            print("[%s] %d: The file '%s' already exists!" % (now, idx, file_path))
+            print("[%s]: The file '%s' already exists!" % (now, file_path))
         else:
             try:
                 if download:
+                    idx += 1
+                    print("[%s] %d: Downloading video '%s' as file '%s' ..." % (now, idx, url, file_path), end="", flush=True)
                     r = requests.get(url, verify=False)
                     if r.status_code == 200:
-                        print("[%s] %d: Downloading video '%s' as file '%s' ..." % (now, idx, url, file_path), end="", flush=True)
                         with open(file_path, 'wb') as f:
                             f.write(r.content)
                             print(" Completed!")
@@ -221,7 +221,6 @@ def save_file(url):
             # print("Small jpg file is ignored..")
             return
 
-        idx += 1
         pattern_jpg_quoted = '\/([^\/]+\/[^\/]+.jpg)$'
         match_jpg = re.search(pattern_jpg_quoted, url)
         jpg_name = match_jpg.group(1).replace("/", "_")
@@ -233,11 +232,12 @@ def save_file(url):
 
         if os.path.exists(file_path):
             cnt_exist += 1
-            print("[%s] %d: The file '%s' already exists!" % (now, idx, file_path))
+            print("[%s]: The file '%s' already exists!" % (now, file_path))
         else:
             try:
                 r = requests.get(url, verify=False)
                 if r.status_code == 200:
+                    idx += 1
                     print("[%s] %d: Downloading pic '%s' as '%s' ..." % (now, idx, url, file_path), end="", flush=True)
                     with open(file_path, 'wb') as f:
                         f.write(r.content)
@@ -258,7 +258,6 @@ def generateFileName(url):
     for path_seg in reversed(path_segs):
         digit_len += sum(c.isdigit() for c in path_seg)
         file_name = path_seg + "_" + file_name if file_name else path_seg
-        print("file_name: " + str(file_name))
         if digit_len > 6:
             break
 
@@ -266,7 +265,7 @@ def generateFileName(url):
 
 
 # download all possible video files from bookmarks
-def download_videos(days):
+def download_bookmark_videos(days):
     timestamp = datetime.timestamp(datetime.now() - timedelta(days = days)) * 1000 * 1000
 
     # get firefox profile
@@ -443,13 +442,13 @@ def isAudioIncluded(filename):
 n = len(sys.argv)
 if n == 1:
     # Download from bookmark db
-    download_videos(1)
+    download_bookmark_videos(1)
 else:
     arg = sys.argv[1]
     if arg.isnumeric():
         # Download from bookmark db back to days
         days = int(arg)
-        download_videos(days)
+        download_bookmark_videos(days)
     elif "http" in arg:
         # Download from the given url
         url = arg
