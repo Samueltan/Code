@@ -197,10 +197,10 @@ def save_file(url):
         else:
             try:
                 if download:
-                    idx += 1
                     print("[%s] %d: Downloading video '%s' as file '%s' ..." % (now, idx, url, file_path), end="", flush=True)
                     r = requests.get(url, verify=False)
                     if r.status_code == 200:
+                        idx += 1
                         with open(file_path, 'wb') as f:
                             f.write(r.content)
                             print(" Completed!")
