@@ -12,6 +12,7 @@ import urllib3
 from pathlib import Path
 from urllib.request import Request, urlopen
 
+FAIL_LIMIT = 50
 DOWNLOAD_PATH_TH = "/Users/samueltan/Downloads/download/auto/th/"
 
 log = False
@@ -38,26 +39,30 @@ if n != 2:
     print("Invalid argument!")
     quit()
 
-url = sys.argv[1]
+# https://my.tokyo-hot.com/product/SKYHD-028/
 # https://my.cdn.tokyo-hot.com/media/samples/6390.mp4
 # https://my.cdn.tokyo-hot.com/media/samples/21262.mp4
 # https://my.cdn.tokyo-hot.com/media/samples/40886.mp4
 # https://my.cdn.tokyo-hot.com/media/samples/n1524.mp4
-# https://my.tokyo-hot.com/product/S2MBD-045/
-
+url = sys.argv[1]
+url_new = url.replace("tokyo-hot.com/product", "cdn.tokyo-hot.com/media/samples")
+url_new = url_new[:-1] + ".mp4"
 pattern = "(https:[^\d]*\/)(([^\/]*[^\d\/])?([\d]*)\.mp4)"
-match = re.search(pattern, url)
+match = re.search(pattern, url_new)
 
-url_prefix = match.group(1)
+# url_prefix = match.group(1)
+url_prefix = "https://my.cdn.tokyo-hot.com/media/samples/"
 file_name = match.group(2)
 file_prefix = match.group(3) if match.group(3) else ""
 sid = match.group(4)
 width = len(sid)
 id = int(sid)
-print("url_prefix = " + url_prefix)
-print("file_name = " + file_name)
-print("file_prefix = " + file_prefix)
-print("sid = " + sid)
+if log:
+    print("url_new = " + url_new)
+    print("url_prefix = " + url_prefix)
+    print("file_name = " + file_name)
+    print("file_prefix = " + file_prefix)
+    print("sid = " + sid)
 
 idx = 0
 cnt_success = 0
@@ -65,7 +70,7 @@ cnt_exist = 0
 cnt_fail = 0
 start = time.time()
 i = id
-while cnt_fail <= 2:
+while cnt_fail <= FAIL_LIMIT:
     file_name = file_prefix + str(i).zfill(width) + ".mp4"
     file_path = DOWNLOAD_PATH_TH + file_name
     current_url = url_prefix + file_name
@@ -89,8 +94,9 @@ while cnt_fail <= 2:
                         f.write(r.content)
                         print(" Completed!")
                         cnt_success += 1
+                        cnt_fail = 0
                 else:
-                    print()
+                    print(" Failed!")
                     cnt_fail += 1
         except Exception as e:
             print("\nException with url: <%s>, file name: <%s>" % (current_url, file_name))
@@ -98,9 +104,9 @@ while cnt_fail <= 2:
             raise 
     i += 1
 
-cnt_fail = 0
+cnt_fail2 = 0
 i = id - 1
-while cnt_fail <= 2:
+while cnt_fail2 <= FAIL_LIMIT:
     file_name = file_prefix + str(i).zfill(width) + ".mp4"
     file_path = DOWNLOAD_PATH_TH + file_name
     current_url = url_prefix + file_name
@@ -124,9 +130,10 @@ while cnt_fail <= 2:
                         f.write(r.content)
                         print(" Completed!")
                         cnt_success += 1
+                        cnt_fail2 = 0
                 else:
-                    print()
-                    cnt_fail += 1
+                    print(" Failed!")
+                    cnt_fail2 += 1
         except Exception as e:
             print("\nException with url: <%s>, file name: <%s>" % (current_url, file_name))
             # print(e)
@@ -134,7 +141,7 @@ while cnt_fail <= 2:
     i -= 1
 
 print("\nSuccessful: %s" % cnt_success)
-print("Failed: %s" % cnt_fail)
+print("Failed: %s" % str(cnt_fail + cnt_fail2))
 print("Already Existed: %s" % cnt_exist)
 end = time.time()
 dur = getTimeByUnit(end - start)
