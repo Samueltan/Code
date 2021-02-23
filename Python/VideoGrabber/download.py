@@ -13,7 +13,7 @@ from pathlib import Path
 from urllib.request import Request, urlopen
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-
+FILE_NAME_DIGIT_LIMIT = 4
 # set the downloading folder
 DOWNLOAD_PATH = "/Users/samueltan/Downloads/download/auto/"
 DOWNLOAD_PATH_FARM = "/Users/samueltan/Downloads/download/auto/farm/"
@@ -258,7 +258,7 @@ def generateFileName(url):
     for path_seg in reversed(path_segs):
         digit_len += sum(c.isdigit() for c in path_seg)
         file_name = path_seg + "_" + file_name if file_name else path_seg
-        if digit_len > 6:
+        if digit_len > FILE_NAME_DIGIT_LIMIT:
             break
 
     return file_name
@@ -444,7 +444,7 @@ def getTimeByUnit(dur):
         return "00:00:%s" % str(dur)
     elif dur < 3600:
         min = int(dur/60)
-        sec = dur - min * 60
+        sec = int(dur - min * 60)
         return "00:%s:%s" % (str(min), str(sec))
     else:
         hour = int(dur/3600)
