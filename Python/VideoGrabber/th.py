@@ -47,7 +47,7 @@ if n != 2:
 url = sys.argv[1]
 url_new = url.replace("tokyo-hot.com/product", "cdn.tokyo-hot.com/media/samples")
 url_new = url_new[:-1] + ".mp4"
-pattern = "(https:[^\d]*\/)(([^\/]*[^\d\/])?([\d]*)\.mp4)"
+pattern = "(https:[^\d]*\/)(([^\d\/]*)([\d]*)([^\d\/]*)\.mp4)"
 match = re.search(pattern, url_new)
 
 # url_prefix = match.group(1)
@@ -55,6 +55,7 @@ url_prefix = "https://my.cdn.tokyo-hot.com/media/samples/"
 file_name = match.group(2)
 file_prefix = match.group(3) if match.group(3) else ""
 sid = match.group(4)
+file_suffix = match.group(5) if match.group(5) else ""
 width = len(sid)
 id = int(sid)
 if log:
@@ -62,6 +63,7 @@ if log:
     print("url_prefix = " + url_prefix)
     print("file_name = " + file_name)
     print("file_prefix = " + file_prefix)
+    print("file_suffix = " + file_suffix)
     print("sid = " + sid)
 
 idx = 0
@@ -71,7 +73,7 @@ cnt_fail = 0
 start = time.time()
 i = id
 while cnt_fail <= FAIL_LIMIT:
-    file_name = file_prefix + str(i).zfill(width) + ".mp4"
+    file_name = file_prefix + str(i).zfill(width) + file_suffix + ".mp4"
     file_path = DOWNLOAD_PATH_TH + file_name
     current_url = url_prefix + file_name
 

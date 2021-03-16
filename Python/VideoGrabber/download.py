@@ -28,8 +28,8 @@ cnt_success = 0
 cnt_failed = 0
 cnt_exist = 0
 start = time.time()
-log = True
-download = False
+# log = True
+# download = False
 log = False
 download = True
 
@@ -144,13 +144,20 @@ def save_file(url):
     global cnt_failed
     global cnt_exist
 
+    file_size_err = False
     req = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-    file_size = urlopen(req).length
-    if log:
+    try:
+        file_size = urlopen(req).length
+    except Exception as e:
+        if log:
+            print(e)
+        file_size_err = True
+
+    if log and not file_size_err:
         print("file_size: " + str(file_size))
 
     if ".mp4" in url:
-        if file_size < 1024 * 1024:
+        if not file_size_err and file_size < 1024 * 1024:
             print("Small mp4 file is ignored..")
             return
 
@@ -173,7 +180,7 @@ def save_file(url):
         if match:
             if source == 'FJSM':
                 file_name = match.group(2) + '.mp4'
-                file_path = DOWNLOAD_PATH + 'fjsm/'
+                file_path = DOWNLOAD_PATH + 'fjsm/' + file_name
             elif source == 'UL':
                 file_name = 'uralesbian_' + match.group(2) + '.mp4'
                 file_path = DOWNLOAD_PATH + 'fjsm/' + file_name
